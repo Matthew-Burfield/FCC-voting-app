@@ -1,5 +1,7 @@
 import axios from 'axios';
 import React, { Component } from 'react';
+
+import SurveyList from './SurveyList'
 import {
 	API_DOMAIN
 } from '../utilities/constants';
@@ -14,7 +16,7 @@ class AllPolls extends Component {
 	}
 	componentDidMount() {
 		axios
-			.get('http://localhost:8000/surveys')
+			.get(`${API_DOMAIN}/surveys`)
 			.then(response => response.data)
 			.then(surveys => this.setState({
 				surveys,
@@ -24,10 +26,8 @@ class AllPolls extends Component {
 	render() {
 		return (
 			<div>
-				All Polls
-				<div>
-					{ this.state.surveys.map(survey => survey.title)}
-				</div>
+				All Polls ({ this.state.surveys.length })
+				<SurveyList surveys={ this.state.surveys } />
 			</div>
 		)
 	}
