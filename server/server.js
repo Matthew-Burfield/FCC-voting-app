@@ -47,7 +47,6 @@ const unauthorized = (err, req, res, next) => {
 }
 
 app.get('/surveys', function(req, res) {
-	console.log("getting the surveys!")
 	mongodb.MongoClient.connect(mongoUri, function(err, db) {
 		if (err) throw err
 		db.collection('survey').find({}).toArray(function(err, result) {
@@ -139,6 +138,4 @@ app.post('/survey', jwtCheck, unauthorized, urlencodedParser, function(req, res)
 	})
 })
 
-app.listen(8000, function () {
-	console.log('Example app listening on port 8000!')
-})
+app.listen(8000, () => console.log('Example app listening on port 8000!'))
