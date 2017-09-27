@@ -6,8 +6,12 @@ const mongodb = require('mongodb')
 const request = require('request')
 const rsaValidation = require('auth0-api-jwt-rsa-validation')
 
+// ISSUER="https://matthew-burfield.au.auth0.com/"
+// AUDIENCE="matthew-burfield.com.au/voting-app"
+// MONGO_URL="mongodb://admin:admin@ds159953.mlab.com:59953/voting-app"
+
 const app = express()
-const mongoUri = process.env.MONGO_URL
+const mongoUri = "mongodb://admin:admin@ds159953.mlab.com:59953/voting-app"
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
@@ -21,17 +25,25 @@ const returnError = (res, err) => {
 const jwtCheck = jwt({
 	secret: rsaValidation(),
 	algorithms: ['RS256'],
-	issuer: process.env.ISSUER,
-	audience: process.env.AUDIENCE,
-})
-
-app.use(function (err, req, res, next) {
-	if (err.name === 'UnauthorizedError') {
-		res.status(401).json({ message: 'Missing or invalid token' })
+	issuer: "https://matthew-burfield.au.auth0.com/",
+	audience: "matthew-burfield.com.au/voting-app",
+	responseType: 'id_token',
+	options: {
+		auth: {
+			responseType: 'id_token',
+			scope: 'openid profile email'
+		}
 	}
 })
 
+const unauthorized = (err, req, res, next) => {
+	if (err.name === 'UnauthorizedError') {
+		res.status(401).json({ message: 'Missing or invalid token' })
+	}
+}
+
 app.get('/surveys', function(req, res) {
+	console.log("getting the surveys!")
 	mongodb.MongoClient.connect(mongoUri, function(err, db) {
 		if (err) throw err
 		db.collection('survey').find({}).toArray(function(err, result) {
@@ -59,7 +71,7 @@ app.post('/vote', urlencodedParser, function(req, res) {
 	})
 })
 
-app.post('/addPollOption', jwtCheck, urlencodedParser, function(req, res) {
+app.post('/addPollOption', jwtCheck, unauthorized, urlencodedParser, function(req, res) {
 	const id = req.body.surveyId
 	const pollOption = {
 		title: req.body.title,
@@ -79,7 +91,7 @@ app.post('/addPollOption', jwtCheck, urlencodedParser, function(req, res) {
 	})
 })
 
-app.post('/comment', jwtCheck, urlencodedParser, function(req, res) {
+app.post('/comment', jwtCheck, unauthorized, urlencodedParser, function(req, res) {
 	const id = req.body.surveyId
 	const comment = {
 		value: req.body.comment,
@@ -99,7 +111,7 @@ app.post('/comment', jwtCheck, urlencodedParser, function(req, res) {
 	})
 })
 
-app.post('/survey', jwtCheck, urlencodedParser, function(req, res) {
+app.post('/survey', jwtCheck, unauthorized, urlencodedParser, function(req, res) {
 	const survey = {
 		title: req.body.title,
 		isPublished: req.body.isPublished,
