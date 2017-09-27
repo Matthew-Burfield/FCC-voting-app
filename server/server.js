@@ -1,4 +1,5 @@
 const bodyParser = require('body-parser')
+const cors = require('cors')
 const express = require('express')
 const jwt = require('express-jwt')
 const moment = require('moment')
@@ -6,14 +7,17 @@ const mongodb = require('mongodb')
 const request = require('request')
 const rsaValidation = require('auth0-api-jwt-rsa-validation')
 
-// ISSUER="https://matthew-burfield.au.auth0.com/"
-// AUDIENCE="matthew-burfield.com.au/voting-app"
-// MONGO_URL="mongodb://admin:admin@ds159953.mlab.com:59953/voting-app"
-
 const app = express()
-const mongoUri = "mongodb://admin:admin@ds159953.mlab.com:59953/voting-app"
 
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
+const mongoUri = process.env.MONGO_URL;
+
+const urlencodedParser = bodyParser.urlencoded({ extended: false })
+
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+app.use(cors(corsOptions))
 
 const returnError = (res, err) => {
 	res.json({
@@ -25,8 +29,8 @@ const returnError = (res, err) => {
 const jwtCheck = jwt({
 	secret: rsaValidation(),
 	algorithms: ['RS256'],
-	issuer: "https://matthew-burfield.au.auth0.com/",
-	audience: "matthew-burfield.com.au/voting-app",
+	issuer: process.env.ISSUER,
+	audience: process.env.AUDIENCE,
 	responseType: 'id_token',
 	options: {
 		auth: {
