@@ -56,6 +56,22 @@ app.get('/surveys', function(req, res) {
 	})
 })
 
+app.get('/survey', function(req, res) {
+	mongodb.MongoClient.connect(mongoUri, function(err, db) {
+		if (err) throw err
+		db.collection('survey').find({
+			_id: mongodb.ObjectId(req.query.id),
+		}).toArray(function(err, result) {
+			console.log(req.query.id, result)
+			if (result.length > 0) {
+				res.json(result)
+			} else {
+				res.status(404).send('The survey you\'re requesting doesn\'t exist!')
+			}
+			db.close()
+		})
+	})
+})
 
 app.post('/vote', urlencodedParser, function(req, res) {
 	const id = req.body.surveyId
