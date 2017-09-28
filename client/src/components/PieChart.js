@@ -1,40 +1,58 @@
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { RadialChart } from 'react-vis';
+import { RadialChart } from 'react-vis'
 
 import '../../node_modules/react-vis/dist/style.css';
 
 
 const getChartData = (data) => {
-	if (data.length === 0) {
-		return [{ key: '', value: 1}]
-	}
-	return data.map(item => ({ key: item.title, value: item.votes }))
+	if (data.findIndex(item => item.votes > 0) === -1) {
+    return [{ angle: 1}]
+  }
+  return data.map(item => ({
+    angle: item.votes,
+    label: item.title,
+  }))
 }
 
-class App extends Component {
+class PieChart extends Component {
+  static propTypes = {
+    data: PropTypes.arrayOf(PropTypes.shape({ angle: PropTypes.number })),
+    width: PropTypes.number,
+    height: PropTypes.number,
+  }
+  constructor(props) {
+    super(props)
+    this.state = {
+      data: [{angle: 0},{angle: 0},{angle: 0}]
+    }
+  }
+  componentDidMount() {
+    setTimeout((() => {
+      this.setState({
+        data: getChartData(this.props.data)
+      })
+    }).bind(this), 1000)
+  }
   render() {
-    const data = [
-      {x: 0, y: 8},
-      {x: 1, y: 5},
-      {x: 2, y: 4},
-      {x: 3, y: 9},
-      {x: 4, y: 1},
-      {x: 5, y: 7},
-      {x: 6, y: 6},
-      {x: 7, y: 3},
-      {x: 8, y: 2},
-      {x: 9, y: 0}
-    ];
     return (
-      <div className="App">
+      <div
+        className="App"
+        style={{
+          width: this.props.width,
+          height: this.props.height,
+          margin: '0 auto',
+        }}
+      >
         <RadialChart
-					data={data}
-					width={300}
-					height={300}
+          animation
+					data={ this.state.data }
+					width={ this.props.width }
+					height={ this.props.height }
 				/>
       </div>
     );
   }
 }
 
-export default App;
+export default PieChart;

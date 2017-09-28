@@ -1,23 +1,30 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
-import AppBar from './components/AppBar';
-import AllPolls from './components/AllPolls';
-import MyPolls from './components/MyPolls';
+import { Provider } from 'react-redux'
+import store from './redux/store'
+
+import AppBar from './components/AppBar'
+import AllPolls from './components/AllPolls'
+import MyPolls from './components/MyPolls'
+import Poll from './components/Poll'
 
 import './App.css';
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <AppBar
-          isLoggedIn={ false }
-        />
-        <Route exact path="/" component={ AllPolls }/>
-        <Route path="/mypolls" component={ MyPolls }/>
-      </div>
+      <Provider store={ store }>
+        <div className="App">
+          <AppBar
+            isLoggedIn={ false }
+          />
+          <Route exact path="/" component={ AllPolls }/>
+          <Route path="/mypolls" component={ MyPolls }/>
+          <Route path="/poll/:surveyId" component={ Poll }/>
+        </div>
+      </Provider>
     );
   }
 }
 
-export default App;
+export default App

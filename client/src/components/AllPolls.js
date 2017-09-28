@@ -1,12 +1,22 @@
 import axios from 'axios';
-import React, { Component } from 'react';
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 
+import { saveSurveys } from '../redux/actionCreators'
 import SurveyList from './SurveyList'
 import {
 	API_DOMAIN
-} from '../utilities/constants';
+} from '../utilities/constants'
 
 class AllPolls extends Component {
+	static propTypes = {
+		saveSurveys: PropTypes.func,
+		surveys: PropTypes.array,
+	}
+	static defaultProps = {
+		surveys: [],
+	}
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -18,19 +28,31 @@ class AllPolls extends Component {
 		axios
 			.get(`${API_DOMAIN}/surveys`)
 			.then(response => response.data)
-			.then(surveys => this.setState({
-				surveys,
-				isLoading: false,
-			}))
+			.then(surveys => {
+				this.props.saveSurveys(surveys)
+				this.setState({
+					isLoading: false,
+				})
+			})
 	}
 	render() {
 		return (
 			<div>
-				All Polls ({ this.state.surveys.length })
-				<SurveyList surveys={ this.state.surveys } />
+				All Polls ({ this.props.surveys.length })
+				<SurveyList surveys={ this.props.surveys } />
 			</div>
 		)
 	}
 }
 
-export default AllPolls;
+const mapDispatchToProps = (dispatch) => ({
+  saveSurveys (surveys) {
+    return dispatch(saveSurveys(surveys))
+  },
+})
+
+const mapStateToProps = (state) => ({
+	surveys: state.surveys
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(AllPolls);

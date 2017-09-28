@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import React from 'react';
 import {GridList, GridTile} from 'material-ui/GridList'
 
@@ -21,21 +22,27 @@ const styles = {
  */
 const SurveyList = ({ surveys }) => (
   <div style={styles.root}>
-    <PieChart />
     <GridList
       cellHeight={180}
       style={styles.gridList}
     >
-      {/* <Subheader>December</Subheader> */}
       {surveys.map(survey => (
-        <a key={ survey._id } href='#'>
+        <Link
+          key={ survey._id }
+          to={ `/poll/${survey._id}` }
+        >
           <GridTile
+            className='griditem'
             title={ survey.title }
-            subtitle={<span>{ survey.comments.length } comments</span>}
+            subtitle={<p>{ survey.comments.length } comments</p>}
           >
-            <PieChart data={ survey.pollOptions } />
+            <PieChart
+              data={ survey.pollOptions }
+              width={200}
+              height={200}
+            />
           </GridTile>
-        </a>
+        </Link>
       ))}
     </GridList>
   </div>
