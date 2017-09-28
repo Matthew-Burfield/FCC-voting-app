@@ -1,5 +1,7 @@
 import React from 'react';
-import {GridList, GridTile} from 'material-ui/GridList';
+import {GridList, GridTile} from 'material-ui/GridList'
+
+import PieChart from './PieChart'
 
 const styles = {
   root: {
@@ -19,19 +21,19 @@ const styles = {
  */
 const SurveyList = ({ surveys }) => (
   <div style={styles.root}>
+    <PieChart />
     <GridList
       cellHeight={180}
       style={styles.gridList}
     >
       {/* <Subheader>December</Subheader> */}
       {surveys.map(survey => (
-        <a href='#'>
+        <a key={ survey._id } href='#'>
           <GridTile
-            key={ survey._id }
             title={ survey.title }
             subtitle={<span>{ survey.comments.length } comments</span>}
           >
-            {/* <img src={tile.img} /> */}
+            <PieChart data={ survey.pollOptions } />
           </GridTile>
         </a>
       ))}
