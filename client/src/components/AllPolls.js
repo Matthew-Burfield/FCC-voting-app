@@ -1,5 +1,6 @@
-import axios from 'axios';
+import axios from 'axios'
 import { connect } from 'react-redux'
+import jwtDecode from 'jwt-decode'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 
@@ -36,7 +37,8 @@ class AllPolls extends Component {
 			}, {})
 
 			// validate the tokenId and get the user data
-
+			const decodedToken = jwtDecode(loginTokens.id_token)
+			console.log(decodedToken)
 		}
 				
 		axios

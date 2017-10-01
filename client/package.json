@@ -9,6 +9,7 @@
     "@okta/okta-react": "^0.0.5",
     "axios": "^0.16.2",
     "jsrsasign": "^8.0.4",
+    "jwt-decode": "^2.2.0",
     "material-ui": "^0.19.2",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
