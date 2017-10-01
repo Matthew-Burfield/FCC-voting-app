@@ -18,13 +18,27 @@ class AllPolls extends Component {
 		surveys: [],
 	}
 	constructor(props) {
-		super(props);
+		super(props)
 		this.state = {
 			surveys: [],
 			isLoading: true,
-		};
+		}	
 	}
 	componentDidMount() {
+		// check if the window has any parameters (i.e. if they have just logged in)
+		if (window && window.location && window.location.hash && window.location.hash.length > 1) {
+			const loginTokens = window.location.hash.slice(1).split('&').reduce((obj, val) => {
+				const item = val.split('=')
+				return {
+					...obj,
+					[item[0]]: item[1],
+				}
+			}, {})
+
+			// validate the tokenId and get the user data
+
+		}
+				
 		axios
 			.get(`${API_DOMAIN}/surveys`)
 			.then(response => response.data)

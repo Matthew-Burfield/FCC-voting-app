@@ -4,7 +4,6 @@ import { RadialChart } from 'react-vis'
 
 import '../../node_modules/react-vis/dist/style.css';
 
-
 const getChartData = (data) => {
 	if (data.findIndex(item => item.votes > 0) === -1) {
     return [{ angle: 1}]
@@ -21,12 +20,14 @@ class PieChart extends Component {
     width: PropTypes.number,
     height: PropTypes.number,
   }
+
   constructor(props) {
     super(props)
     this.state = {
       data: [{angle: 0},{angle: 0},{angle: 0}]
     }
   }
+	
   componentDidMount() {
     setTimeout((() => {
       this.setState({
@@ -34,6 +35,7 @@ class PieChart extends Component {
       })
     }).bind(this), 1000)
   }
+
   render() {
     return (
       <div

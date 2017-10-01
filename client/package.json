@@ -6,7 +6,9 @@
     "react-scripts": "1.0.14"
   },
   "dependencies": {
+    "@okta/okta-react": "^0.0.5",
     "axios": "^0.16.2",
+    "jsrsasign": "^8.0.4",
     "material-ui": "^0.19.2",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",

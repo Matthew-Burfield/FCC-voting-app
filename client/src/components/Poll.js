@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 
+import PieChart from './PieChart'
 import { saveSurveys } from '../redux/actionCreators'
 import {
 	API_DOMAIN
@@ -10,15 +11,18 @@ import {
 
 class Poll extends Component {
 	static propTypes = {
+		match: PropTypes.object,
 		saveSurveys: PropTypes.func,
-		surveyList: PropTypes.array,
-	}
+		surveyList: PropTypes.object,
+	};
+
 	constructor(props) {
 		super(props)
 		this.state = {
 			survey: null,
 		}
 	}
+
 	componentDidMount() {
 		const { match, saveSurveys, surveyList } = this.props
 		if (surveyList && surveyList.length > 0) {
@@ -55,7 +59,38 @@ class Poll extends Component {
 			return <h1>Something went wrong and we can't find this survey. Go back and try again</h1>
 		}
 		return (
-			<h1>{ survey.title }</h1>
+			<div>
+				<h1>{ survey.title }</h1>
+				<div>
+					{
+						survey.pollOptions.map(option => (
+							<p>{ `${ option.title }: ${ option.votes } ${ option.votes === 1 ? 'vote' : 'votes' }` }</p>
+						))
+					}
+				</div>
+				<PieChart data={ survey.pollOptions } width={ 400 } height={ 400 } />				
+				<div>
+					<h2>Comments</h2>
+					<div>
+						{
+							survey.comments.map(comment => (
+								<div>
+									<p>{ comment.value }</p>
+									<p>{ comment.datetime }</p>
+								</div>
+							))
+						}
+					</div>
+						{ !this.props.loggedIn &&
+							<div>
+								<div>
+									Please log in to leave a comment
+								</div>
+								<button disabled>Add comment</button>
+							</div>
+						}
+				</div>
+			</div>
 		)
 	}
 }
@@ -69,3 +104,4 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Poll);
+
