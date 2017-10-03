@@ -2,6 +2,8 @@ import axios from 'axios'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import Spin from 'antd/lib/spin'
+import 'antd/lib/spin/style/css'
 
 import { saveSurveys } from '../redux/actions/surveyActions'
 import SurveyList from './SurveyList'
@@ -38,8 +40,13 @@ class AllPolls extends Component {
 	render() {
 		return (
 			<div>
-				All Polls ({ this.props.surveys.length })
-				<SurveyList surveys={ this.props.surveys } />
+				<h1>All Polls ({ this.props.surveys.length })</h1>
+				{ this.state.isLoading
+					?
+						<Spin size="large" />
+					:
+						<SurveyList surveys={ this.props.surveys } />
+				}
 			</div>
 		)
 	}
