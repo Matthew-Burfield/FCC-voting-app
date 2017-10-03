@@ -1,9 +1,10 @@
 export const LOGIN_USER = 'LOGIN_USER'
 export const LOGOUT_USER = 'LOGOUT_USER'
 
-export const loginUser = () => {
+export const loginUser = (payload) => {
   return {
-    type: LOGIN_USER,
+		type: LOGIN_USER,
+		payload,
   }
 }
 

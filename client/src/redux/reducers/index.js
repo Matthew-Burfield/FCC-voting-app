@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux'
-import surveyReducers from './surveyReducers'
-import userReducers from './userReducers'
+import surveys from './surveyReducer'
+import user from './userReducer'
 
 export default combineReducers({
-	surveyReducers,
-	userReducers,
+	surveys,
+	user,
 })

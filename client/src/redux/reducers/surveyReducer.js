@@ -2,14 +2,10 @@ import {
   SAVE_SURVEYS,
 } from '../actions/surveyActions'
 
-const DEFAULT_STORE = {
-	surveys: [],
-}
+const DEFAULT_STORE = []
 
 const saveSurveys = (state, action) => {
-	return {
-		surveys: action.surveys,
-	}
+	return action.surveys
 }
 
 export default (state = DEFAULT_STORE, action) => {

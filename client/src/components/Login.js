@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
-import Redirect from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import jwtDecode from 'jwt-decode'
@@ -11,7 +11,7 @@ import {
 } from '../utilities/utils.js'
 import { loginUser } from '../redux/actions/userActions'
 
-class Security extends Component {
+class Login extends Component {
 	static propTypes = {
 		loginUser: PropTypes.func,
 	}
@@ -24,8 +24,8 @@ class Security extends Component {
 	}
 
 	componentDidMount() {
-		// check if there is an fccvotingapp property in localstorage with tokens
-		// If there is, validate then, and then log the user in
+		// check if the window has any parameters (i.e. if they have just logged in)
+		saveTokensToLocalStorage()
 		// Check if the access token and id token are in localStorage (i.e. they are already logged in)
 		const tokenId = getTokenId()
 		const accessToken = getAccessToken()
@@ -35,18 +35,19 @@ class Security extends Component {
 			const decodedToken = jwtDecode(tokenId)
 			this.props.loginUser(decodedToken);
 		} catch (InvalidTokenError) {
-			console.log('user is not logged in')
+			console.log('invalid token - not logging you in')
 		}
+		this.props.history.push('/')
 	}
 				
 	render() {
-		return this.props.children
+		return null
 	}
 }
 
 const mapDispatchToProps = (dispatch) => ({
-	loginUser: () => dispatch(loginUser()),
+	loginUser: (decodedToken) => dispatch(loginUser(decodedToken)),
 })
 
-export default connect(null, mapDispatchToProps)(Security)
+export default connect(null, mapDispatchToProps)(withRouter(Login))
 

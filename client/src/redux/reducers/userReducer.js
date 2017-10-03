@@ -4,14 +4,13 @@ import {
 } from '../actions/userActions'
 
 const DEFAULT_STORE = {
-	user: {
-		authenticated: false,
-	},
+	authenticated: false,
 }
 
-const loginUser = (state) => {
+const loginUser = (state, action) => {
 	const newUserState = Object.assign({}, state.user, {
 		authenticated: true,
+		...action.payload,
 	})
 	return newUserState
 }
@@ -26,7 +25,7 @@ const logoutUser = (state) => {
 export default (state = DEFAULT_STORE, action) => {
   switch (action.type) {
     case LOGIN_USER:
-			return loginUser(state)	
+			return loginUser(state, action)	
 		case LOGOUT_USER:
       return logoutUser(state)
     default:

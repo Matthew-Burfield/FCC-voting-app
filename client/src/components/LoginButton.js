@@ -15,7 +15,7 @@ const LoginButton = ({ isAuthenticated, logoutUser }) => (
 			:
 			<FlatButton
 				label='login'
-				href='https://matthew-burfield.au.auth0.com/authorize?audience=matthew-burfield.com.au/voting-app&scope=openid%20profile%20email&response_type=id_token%20token&client_id=9a0Bi5RDIAHWs8j3hwGJm8EEPR17IIGE&redirect_uri=http://localhost:3000&nonce=123abcstate=123abc'
+				href='https://matthew-burfield.au.auth0.com/authorize?audience=matthew-burfield.com.au/voting-app&scope=openid%20profile%20email&response_type=id_token%20token&client_id=9a0Bi5RDIAHWs8j3hwGJm8EEPR17IIGE&redirect_uri=http://localhost:3000/login&nonce=123abcstate=123abc'
 			/>
 		}
 	</div>
@@ -31,7 +31,7 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 const mapStateToProps = (state) => ({
-	isAuthenticated: state.userReducers.authenticated,
+	isAuthenticated: state.user.authenticated,
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginButton)
