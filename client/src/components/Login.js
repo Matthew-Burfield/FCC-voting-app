@@ -35,7 +35,7 @@ class Login extends Component {
 			const decodedToken = jwtDecode(tokenId)
 
 			// Also check state and noche
-			// var isAuthenticated: jwt && (jwt.exp > Date.now() / 1000);
+			// TODO: var isAuthenticated: jwt && (jwt.exp > Date.now() / 1000);
 			
 			this.props.loginUser(decodedToken);
 		} catch (InvalidTokenError) {

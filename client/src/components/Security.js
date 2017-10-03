@@ -33,7 +33,7 @@ class Security extends Component {
 		// validate the tokenId and get the user data
 		try {
 			const decodedToken = jwtDecode(tokenId)
-			// var isAuthenticated: jwt && (jwt.exp > Date.now() / 1000);
+			// TODO: var isAuthenticated: jwt && (jwt.exp > Date.now() / 1000);
 			this.props.loginUser(decodedToken);
 		} catch (InvalidTokenError) {
 			console.log('user is not logged in')
