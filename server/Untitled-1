@@ -1,0 +1,2 @@
+https://dev-378196.oktapreview.com/oauth2/v1/authorize?idp=0oac8n5rm9JLZuTV10h7&client_id=0oac8dbmymXaOAFbO0h7&response_type=id_token&response_mode=fragment&scope=openid&redirect_uri=http://localhost:3000/implicit/callback/&state=WM6D&nonce=YsG76jo
+https://dev-378196.oktapreview.com/login/login.htm?fromURI=%2Foauth2%2Fv1%2Fauthorize%2Fredirect%3Fokta_key%3D6W4MCU_nOY-6C2hwx6CuxdtGNptXhLGXb5uYOuejhQI

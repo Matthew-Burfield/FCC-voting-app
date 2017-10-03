@@ -1,1 +1,0 @@
-export const SAVE_SURVEYS = 'SAVE_SURVEYS'

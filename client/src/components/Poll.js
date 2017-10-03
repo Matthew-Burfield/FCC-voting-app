@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 
 import PieChart from './PieChart'
-import { saveSurveys } from '../redux/actionCreators'
+import { saveSurveys } from '../redux/actions/surveyActions'
 import {
 	API_DOMAIN
 } from '../utilities/constants'

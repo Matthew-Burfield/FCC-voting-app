@@ -1,43 +1,37 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import { withAuth } from '@okta/okta-react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import React from 'react'
 import FlatButton from 'material-ui/FlatButton'
 
-class LoginButton extends Component {
-	constructor(props) {
-		super(props)
-		this.state = {
-			authenticated: null
-		}
-	}
+import { logoutUser } from '../redux/actions/userActions'
 
-	componentDidUpdate() {
-		this.checkAuthentication()
-	}
-
-	checkAuthentication =	async () => {
-		const authenticated = await this.props.auth.isAuthenticated()
-		if (authenticated !== this.state.authenticated) {
-			this.setState({
-				authenticated,
-			})
-		}
-	}
-
-	render() {
-		return this.state.authenticated
-			?
-				<FlatButton
-					label='Logout'
-					onClick={ this.props.auth.logout }
-				/>
+const LoginButton = ({ isAuthenticated, logoutUser }) => (
+	<div>
+		{ isAuthenticated ?
+			<FlatButton
+				label='Logout'
+				onClick={ logoutUser }
+			/>
 			:
-				<FlatButton
-					label='login'
-					onClick={ this.props.auth.login }
-				/>
-	}
+			<FlatButton
+				label='login'
+				href='https://matthew-burfield.au.auth0.com/authorize?audience=matthew-burfield.com.au/voting-app&scope=openid%20profile%20email&response_type=id_token%20token&client_id=9a0Bi5RDIAHWs8j3hwGJm8EEPR17IIGE&redirect_uri=http://localhost:3000&nonce=123abcstate=123abc'
+			/>
+		}
+	</div>
+)
+
+LoginButton.propTypes = {
+	isAuthenticated: PropTypes.bool,
+	logoutUser: PropTypes.func,
 }
 
-export default withAuth(LoginButton)
+const mapDispatchToProps = (dispatch) => ({
+	logoutUser: () => dispatch(logoutUser()),
+})
 
+const mapStateToProps = (state) => ({
+	isAuthenticated: state.userReducers.authenticated,
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginButton)

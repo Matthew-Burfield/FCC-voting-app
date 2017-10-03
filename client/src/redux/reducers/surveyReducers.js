@@ -1,6 +1,6 @@
 import {
   SAVE_SURVEYS,
-} from './actions'
+} from '../actions/surveyActions'
 
 const DEFAULT_STORE = {
 	surveys: [],

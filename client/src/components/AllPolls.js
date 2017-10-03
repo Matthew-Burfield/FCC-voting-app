@@ -1,10 +1,9 @@
 import axios from 'axios'
 import { connect } from 'react-redux'
-import jwtDecode from 'jwt-decode'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 
-import { saveSurveys } from '../redux/actionCreators'
+import { saveSurveys } from '../redux/actions/surveyActions'
 import SurveyList from './SurveyList'
 import {
 	API_DOMAIN
@@ -26,21 +25,6 @@ class AllPolls extends Component {
 		}	
 	}
 	componentDidMount() {
-		// check if the window has any parameters (i.e. if they have just logged in)
-		if (window && window.location && window.location.hash && window.location.hash.length > 1) {
-			const loginTokens = window.location.hash.slice(1).split('&').reduce((obj, val) => {
-				const item = val.split('=')
-				return {
-					...obj,
-					[item[0]]: item[1],
-				}
-			}, {})
-
-			// validate the tokenId and get the user data
-			const decodedToken = jwtDecode(loginTokens.id_token)
-			console.log(decodedToken)
-		}
-				
 		axios
 			.get(`${API_DOMAIN}/surveys`)
 			.then(response => response.data)

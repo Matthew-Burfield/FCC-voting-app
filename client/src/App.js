@@ -7,6 +7,7 @@ import AppBar from './components/AppBar'
 import AllPolls from './components/AllPolls'
 import MyPolls from './components/MyPolls'
 import Poll from './components/Poll'
+import Security from './components/Security'
 
 import './App.css';
 
@@ -14,14 +15,16 @@ class App extends Component {
   render() {
     return (
       <Provider store={ store }>
-        <div className="App">
-          <AppBar
-            isLoggedIn={ false }
-          />
-          <Route exact path="/" component={ AllPolls }/>
-          <Route path="/mypolls" component={ MyPolls }/>
-          <Route path="/poll/:surveyId" component={ Poll }/>
-        </div>
+				<Security>
+					<div className="App">
+						<AppBar
+							isLoggedIn={ false }
+						/>
+						<Route exact path="/" component={ AllPolls }/>
+						<Route path="/mypolls" component={ MyPolls }/>
+						<Route path="/poll/:surveyId" component={ Poll }/>
+					</div>
+				</Security>
       </Provider>
     );
   }
