@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 
-import PieChart from './PieChart'
+import PieChart from '../components/PieChart'
 import { saveSurveys } from '../redux/actions/surveyActions'
 import {
 	API_DOMAIN

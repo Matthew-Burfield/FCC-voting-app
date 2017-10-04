@@ -6,7 +6,7 @@ import Spin from 'antd/lib/spin'
 import 'antd/lib/spin/style/css'
 
 import { saveSurveys } from '../redux/actions/surveyActions'
-import SurveyList from './SurveyList'
+import SurveyList from '../components/SurveyList'
 import {
 	API_DOMAIN
 } from '../utilities/constants'

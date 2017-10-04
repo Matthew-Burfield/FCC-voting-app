@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
-import store from './redux/store'
+import store from '../redux/store'
 
-import AppBar from './components/AppBar'
-import AllPolls from './components/AllPolls'
-import Login from './components/Login'
-import MyPolls from './components/MyPolls'
-import Poll from './components/Poll'
-import Security from './components/Security'
+import AppBar from '../components/AppBar'
+import AllPolls from './AllPolls'
+import Login from './Login'
+import MyPolls from './MyPolls'
+import Poll from './Poll'
+import Security from './Security'
 
 import './App.css';
 
