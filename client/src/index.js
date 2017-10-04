@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {
   BrowserRouter as Router,
 } from 'react-router-dom'
@@ -10,9 +9,7 @@ import registerServiceWorker from './registerServiceWorker';
 
 const Index = () => (
 	<Router>
-		<MuiThemeProvider>
-			<App />
-		</MuiThemeProvider>
+		<App />
 	</Router>
 );
 

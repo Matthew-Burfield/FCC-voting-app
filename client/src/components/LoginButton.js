@@ -1,7 +1,6 @@
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React from 'react'
-import FlatButton from 'material-ui/FlatButton'
 import Button from 'antd/lib/button'
 import 'antd/lib/button/style/css'
 

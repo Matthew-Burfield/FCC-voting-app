@@ -2,8 +2,10 @@ import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from '../redux/store'
+import Layout, { Content } from 'antd/lib/layout'
+import 'antd/lib/layout/style/css'
 
-import AppBar from '../components/AppBar'
+import Header from '../components/Header'
 import AllPolls from './AllPolls'
 import Login from './Login'
 import MyPolls from './MyPolls'
@@ -17,15 +19,19 @@ class App extends Component {
     return (
       <Provider store={ store }>
 				<Security>
-					<div className="App">
-						<AppBar
-							isLoggedIn={ false }
-						/>
-						<Route exact path="/" component={ AllPolls }/>
-						<Route path="/login" component={ Login }/>
-						<Route path="/mypolls" component={ MyPolls }/>
-						<Route path="/poll/:surveyId" component={ Poll }/>
-					</div>
+					<Layout>
+						<Header isLoggedIn={ false } />
+						<Content
+							style={{
+								padding: 20,
+							}}
+						>
+							<Route exact path="/" component={ AllPolls }/>
+							<Route path="/login" component={ Login }/>
+							<Route path="/mypolls" component={ MyPolls }/>
+							<Route path="/poll/:surveyId" component={ Poll }/>
+						</Content>
+					</Layout>
 				</Security>
       </Provider>
     );

@@ -5,6 +5,7 @@ import React, { Component } from 'react'
 import Spin from 'antd/lib/spin'
 import 'antd/lib/spin/style/css'
 
+import ContentHeader from '../components/ContentHeader'
 import { saveSurveys } from '../redux/actions/surveyActions'
 import SurveyList from '../components/SurveyList'
 import {
@@ -40,7 +41,7 @@ class AllPolls extends Component {
 	render() {
 		return (
 			<div>
-				<h1>All Polls ({ this.props.surveys.length })</h1>
+				<ContentHeader>All Polls ({ this.props.surveys.length })</ContentHeader>
 				{ this.state.isLoading
 					?
 						<Spin size="large" />

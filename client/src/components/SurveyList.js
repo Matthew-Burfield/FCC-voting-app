@@ -1,51 +1,41 @@
 import { Link } from 'react-router-dom'
 import React from 'react';
-import {GridList, GridTile} from 'material-ui/GridList'
+import { Row, Col } from 'antd/lib/grid'
+import Card from 'antd/lib/card'
+import 'antd/lib/card/style/css'
+import 'antd/lib/grid/style/css'
 
 import PieChart from './PieChart'
 
-const styles = {
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-  },
-  gridList: {
-    width: '100vw',
-    height: '80vh',
-    overflowY: 'auto',
-  },
-};
-
-/**
- * A simple example of a scrollable `GridList` containing a [Subheader](/#/components/subheader).
- */
 const SurveyList = ({ surveys }) => (
-  <div style={styles.root}>
-    <GridList
-      cellHeight={180}
-      style={styles.gridList}
-    >
-      {surveys.map(survey => (
+  <Row>
+    {surveys.map(survey => (
+      <Col
+        key={ survey._id }
+        span={ 8 }
+        style={{ padding: 8 }}
+      >
         <Link
-          key={ survey._id }
           to={ `/poll/${survey._id}` }
         >
-          <GridTile
-            className='griditem'
+          <Card
             title={ survey.title }
-            subtitle={<p>{ survey.comments.length } comments</p>}
+            bordered={false}
+            style={{
+              backgroundColor: '#404040',
+              color: '#fff',
+            }}
           >
             <PieChart
               data={ survey.pollOptions }
               width={200}
               height={200}
             />
-          </GridTile>
+          </Card>
         </Link>
-      ))}
-    </GridList>
-  </div>
+      </Col>
+    ))}
+  </Row>
 );
 
 export default SurveyList;

@@ -1,5 +1,3 @@
-import jwtDecode from 'jwt-decode'
-
 export const getAccessToken = () => {
 	if (window &&
 		window.localStorage &&

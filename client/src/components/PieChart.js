@@ -29,11 +29,13 @@ class PieChart extends Component {
   }
 	
   componentDidMount() {
-    setTimeout((() => {
-      this.setState({
-        data: getChartData(this.props.data)
-      })
-    }).bind(this), 1000)
+    setTimeout(this.addDataToChart, 1000)
+  }
+
+  addDataToChart = () => {
+    this.setState({
+      data: getChartData(this.props.data)
+    })
   }
 
   render() {

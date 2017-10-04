@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 
 import jwtDecode from 'jwt-decode'
 import {
-	getAccessToken,
 	getTokenId,
 	saveTokensToLocalStorage,
 } from '../utilities/utils.js'
@@ -28,7 +27,6 @@ class Login extends Component {
 		saveTokensToLocalStorage()
 		// Check if the access token and id token are in localStorage (i.e. they are already logged in)
 		const tokenId = getTokenId()
-		const accessToken = getAccessToken()
 
 		// validate the tokenId and get the user data
 		try {
