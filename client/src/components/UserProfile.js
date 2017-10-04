@@ -1,15 +1,22 @@
 
 import Avatar from 'antd/lib/avatar'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import React, { Component } from 'react'
+import React from 'react'
 
 import 'antd/lib/avatar/style/css'
 
 
 const UserProfile = ({ username, profileImage }) => (
 	<div>
-		<Avatar src={ profileImage } />
-		<div>{ username }</div>
+		<Avatar
+			style={{
+				verticalAlign: 'middle',
+				marginRight: 10,
+			}}
+			src={ profileImage }
+		/>
+		<span>{ username }</span>
 	</div>
 )
 
@@ -23,4 +30,4 @@ const mapStateToProps = (state) => ({
 	profileImage: state.user.picture,
 })
 
-export default UserProfile
+export default connect(mapStateToProps)(UserProfile)
