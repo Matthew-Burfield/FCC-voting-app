@@ -11,6 +11,7 @@ const loginUser = (state, action) => {
 	const newUserState = Object.assign({}, state.user, {
 		authenticated: true,
 		...action.payload,
+		username: action.payload.given_name || action.payload.name,
 	})
 	return newUserState
 }

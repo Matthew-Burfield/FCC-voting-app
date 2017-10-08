@@ -1,11 +1,22 @@
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import React from 'react'
+
 import { Header } from 'antd/lib/layout'
 import Menu from 'antd/lib/menu'
 import 'antd/lib/menu/style/css'
 import 'antd/lib/layout/style/css'
 
-import LoginButton from './LoginButton'
+import HeaderLink from './HeaderLink'
+import HeaderLogin from './HeaderLogin'
+import NewPoll from '../containers/NewPoll'
 import UserProfile from './UserProfile'
+
+const menuStyles = {
+	lineHeight: '64px',
+	float: 'right',
+}
 
 const HeaderContainer = (props) => (
 	<Header>
@@ -22,19 +33,31 @@ const HeaderContainer = (props) => (
 			theme="dark"
 			mode="horizontal"
 			defaultSelectedKeys={['2']}
-			style={{
-				lineHeight: '64px',
-				float: 'right',
-			}}
+			style={menuStyles}
 		>
+		{ props.isAuthenticated &&
 			<Menu.Item key="profile">
 				<UserProfile {...props}  />
 			</Menu.Item>
-			<Menu.Item key="logout">
-				<LoginButton {...props} />
+		}
+		{ props.isAuthenticated &&
+			<Menu.Item key="newpoll">
+				<HeaderLink to='newpoll' label='Create new poll' />
 			</Menu.Item>
+		}
+		<Menu.Item key="logout">
+			<HeaderLogin {...props} />
+		</Menu.Item>
 		</Menu>
 	</Header>
-);
+)
 
-export default HeaderContainer;
+HeaderContainer.propTypes = {
+	isAuthenticated: PropTypes.bool,
+}
+
+const mapStateToProps = (state) => ({
+	isAuthenticated: state.user.authenticated,
+})
+
+export default connect(mapStateToProps, null)(HeaderContainer)

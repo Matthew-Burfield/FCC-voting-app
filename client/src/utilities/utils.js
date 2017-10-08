@@ -19,6 +19,16 @@ export const getTokenId = () => {
 	return null
 }
 
+export const removeLocalTokens = () => {
+	if (window &&
+		window.localStorage &&
+		window.localStorage.fccvotingapp &&
+		window.localStorage.fccvotingapp.length
+	) {
+			window.localStorage.fccvotingapp = ''
+		}
+}
+
 export const saveTokensToLocalStorage = () => {
 	if (
 		window && 

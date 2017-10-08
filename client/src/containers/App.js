@@ -9,6 +9,7 @@ import Header from '../components/Header'
 import AllPolls from './AllPolls'
 import Login from './Login'
 import MyPolls from './MyPolls'
+import NewPoll from './NewPoll'
 import Poll from './Poll'
 import Security from './Security'
 
@@ -20,7 +21,7 @@ class App extends Component {
       <Provider store={ store }>
 				<Security>
 					<Layout>
-						<Header isLoggedIn={ false } />
+						<Header />
 						<Content
 							style={{
 								padding: 20,
@@ -30,6 +31,7 @@ class App extends Component {
 							<Route path="/login" component={ Login }/>
 							<Route path="/mypolls" component={ MyPolls }/>
 							<Route path="/poll/:surveyId" component={ Poll }/>
+							<Route path="/newpoll" component={ NewPoll }/>
 						</Content>
 					</Layout>
 				</Security>

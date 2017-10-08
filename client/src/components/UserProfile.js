@@ -26,7 +26,7 @@ UserProfile.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-	username: state.user.given_name,
+	username: state.user.username,
 	profileImage: state.user.picture,
 })
 
