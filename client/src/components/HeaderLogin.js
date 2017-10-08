@@ -1,25 +1,39 @@
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React from 'react'
-import Button from 'antd/lib/button'
-import 'antd/lib/button/style/css'
 
+import {
+	authDomain,
+	audience,
+	scope,
+	responseType,
+	clientId,
+	redirectUrl,
+	nonce,
+	state,
+} from '../utilities/constants'
 import { logoutUser } from '../redux/actions/userActions'
+
+import './Header.css'
+
 
 const HeaderLogin = ({ isAuthenticated, logoutUser }) => (
 	<div>
 		{ isAuthenticated ?
-			<Button
+			<button className='header-button'
 				onClick={ logoutUser }
 			>
 				Logout
-			</Button>
+			</button>
 			:
-			<Button>
-				<a href='https://matthew-burfield.au.auth0.com/authorize?audience=matthew-burfield.com.au/voting-app&scope=openid%20profile%20email&response_type=id_token%20token&client_id=9a0Bi5RDIAHWs8j3hwGJm8EEPR17IIGE&redirect_uri=http://localhost:3000/login&nonce=123abcstate=123abc'>
+			<button className='header-button'>
+				<a
+					className='header-a'
+					href={ `https://${authDomain}/authorize?audience=${audience}&scope=${scope}&response_type=${responseType}&client_id=${clientId}&redirect_uri=${redirectUrl}&nonce=${nonce}&state=${state}` }
+				>
 					Login
 				</a>
-			</Button>
+			</button>
 		}
 	</div>
 )

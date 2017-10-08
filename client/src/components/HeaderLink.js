@@ -1,16 +1,15 @@
-import Button from 'antd/lib/button'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import React from 'react'
 
-import 'antd/lib/button/style/css'
+import './Header.css'
 
 const HeaderLink = (props) => (
-	<Button>
-		<Link to={ props.to }>
+	<button className='header-button'>
+		<Link to={ props.to } className='header-a'>
 			{ props.label }
 		</Link>
-	</Button>
+	</button>
 )
 
 HeaderLink.propTypes = {
