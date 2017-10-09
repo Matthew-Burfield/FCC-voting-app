@@ -1,5 +1,4 @@
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import React from 'react'
 
@@ -10,7 +9,6 @@ import 'antd/lib/layout/style/css'
 
 import HeaderLink from './HeaderLink'
 import HeaderLogin from './HeaderLogin'
-import NewPoll from '../containers/NewPoll'
 import UserProfile from './UserProfile'
 
 const menuStyles = {
