@@ -1,15 +1,36 @@
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import {
+	Button,
+	Input,
+	Icon,
+	Form,
+	Switch,
+	Row,
+	Col,
+} from 'antd'
 
-import Input from 'antd/lib/input'
-import Icon from 'antd/lib/icon'
-import Form from 'antd/lib/form'
-import Switch from 'antd/lib/switch'
-
+import DynamicFieldset from '../components/DynamicFieldset'
 import ContentHeader from '../components/ContentHeader'
 
 const FormItem = Form.Item;
+
+const formStyles = {
+	maxWidth: 1000,
+	margin: '0 auto',
+}
+
+const formItemLayout = {
+	labelCol: {
+		xs: { span: 24 },
+		sm: { span: 4 },
+	},
+	wrapperCol: {
+		xs: { span: 24 },
+		sm: { span: 16 },
+	},
+};
 
 class NewPoll extends Component {
 	constructor(props) {
@@ -19,23 +40,55 @@ class NewPoll extends Component {
 			isLoading: true,
 		}	
 	}
+
+	handleTitleChange = (e) => {
+		console.log(e)
+	}
+
+	handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+      }
+    });
+  }
+
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		return ([
 			<ContentHeader key='pageTitle'>New Poll</ContentHeader>,
-			<Form key='pageForm'>
-				<FormItem>
+			<Form
+				key='pageForm'
+				onSubmit={ this.handleSubmit }
+				style={ formStyles }
+			>
+				<FormItem label='Title' { ...formItemLayout }>
 					{getFieldDecorator('title', {
 					rules: [{ required: true, message: 'You must enter a title!' }],
 					})(
-						<Input prefix={<Icon type='title' style={{ fontSize: 13 }} />} placeholder='Title' />
+						<Input
+							prefix={<Icon type='title' style={{ fontSize: 13 }} />}
+							placeholder='Type here...'
+						/>
 					)}
 				</FormItem>
-        <FormItem>
+				<DynamicFieldset form={ this.props.form } formItemLayout={ formItemLayout } />
+				<FormItem
+					label='Publish'
+					{ ...formItemLayout }
+				>
           {getFieldDecorator('publish')(
-            <Switch type="publish" placeholder="Publish" />
+						<Switch type='publish'/>
           )}
         </FormItem>
+				<Row>
+					<Col span={ 24 } offset={ 4 }>
+						<FormItem { ...formItemLayout }>
+							<Button type="primary" htmlType="submit">Submit</Button>
+						</FormItem>
+					</Col>
+				</Row>
 			</Form>
 		]
 		)

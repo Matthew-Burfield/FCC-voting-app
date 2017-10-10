@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from '../redux/store'
-import Layout, { Content } from 'antd/lib/layout'
-import 'antd/lib/layout/style/css'
+import  { Layout } from 'antd'
 
 import Header from '../components/Header'
 import AllPolls from './AllPolls'
@@ -13,7 +12,7 @@ import NewPoll from './NewPoll'
 import Poll from './Poll'
 import Security from './Security'
 
-import './App.css';
+const { Content } = Layout
 
 class App extends Component {
   render() {
