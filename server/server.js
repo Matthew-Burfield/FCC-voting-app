@@ -11,13 +11,12 @@ const app = express()
 
 const mongoUri = process.env.MONGO_URL;
 
-const urlencodedParser = bodyParser.urlencoded({ extended: false })
-
 const corsOptions = {
   origin: 'http://localhost:3000',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 app.use(cors(corsOptions))
+app.use(bodyParser.json())
 
 const returnError = (res, err) => {
 	res.json({
@@ -73,7 +72,7 @@ app.get('/survey', function(req, res) {
 	})
 })
 
-app.post('/vote', urlencodedParser, function(req, res) {
+app.post('/vote', function(req, res) {
 	const id = req.body.surveyId
 	const vote = `pollOptions.${req.body.pollOptionIndex}.votes`
 	mongodb.MongoClient.connect(mongoUri, function(err, db) {
@@ -90,7 +89,7 @@ app.post('/vote', urlencodedParser, function(req, res) {
 	})
 })
 
-app.post('/addPollOption', jwtCheck, unauthorized, urlencodedParser, function(req, res) {
+app.post('/addPollOption', jwtCheck, unauthorized, function(req, res) {
 	const id = req.body.surveyId
 	const pollOption = {
 		title: req.body.title,
@@ -110,7 +109,7 @@ app.post('/addPollOption', jwtCheck, unauthorized, urlencodedParser, function(re
 	})
 })
 
-app.post('/comment', jwtCheck, unauthorized, urlencodedParser, function(req, res) {
+app.post('/comment', jwtCheck, unauthorized, function(req, res) {
 	const id = req.body.surveyId
 	const comment = {
 		value: req.body.comment,
@@ -130,11 +129,11 @@ app.post('/comment', jwtCheck, unauthorized, urlencodedParser, function(req, res
 	})
 })
 
-app.post('/survey', jwtCheck, unauthorized, urlencodedParser, function(req, res) {
+app.post('/survey', jwtCheck, unauthorized, function(req, res) {
 	const survey = {
 		title: req.body.title,
 		isPublished: req.body.isPublished,
-		pollOptions: req.body.pollOption.map(value => ({
+		pollOptions: req.body.pollOptions.map(value => ({
 			title: value,
 			votes: 0,
 		})),
