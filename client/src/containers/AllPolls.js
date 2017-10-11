@@ -1,16 +1,11 @@
-import axios from 'axios'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import Spin from 'antd/lib/spin'
-import 'antd/lib/spin/style/css'
+import { Spin } from 'antd'
 
 import ContentHeader from '../components/ContentHeader'
 import { saveSurveys } from '../redux/actions/surveyActions'
 import SurveyList from '../components/SurveyList'
-import {
-	API_DOMAIN
-} from '../utilities/constants'
 
 class AllPolls extends Component {
 	static propTypes = {
@@ -27,17 +22,7 @@ class AllPolls extends Component {
 			isLoading: true,
 		}	
 	}
-	componentDidMount() {
-		axios
-			.get(`${API_DOMAIN}/surveys`)
-			.then(response => response.data)
-			.then(surveys => {
-				this.props.saveSurveys(surveys)
-				this.setState({
-					isLoading: false,
-				})
-			})
-	}
+
 	render() {
 		return (
 			<div>

@@ -11,6 +11,7 @@ import {
 	Col,
 } from 'antd'
 
+import { createNewPoll } from '../redux/actions/surveyActions'
 import DynamicFieldset from '../components/DynamicFieldset'
 import ContentHeader from '../components/ContentHeader'
 
@@ -33,10 +34,13 @@ const formItemLayout = {
 };
 
 class NewPoll extends Component {
+	static propTypes = {
+		createNewPoll: PropTypes.func,
+	}
+
 	constructor(props) {
 		super(props)
 		this.state = {
-			surveys: [],
 			isLoading: true,
 		}	
 	}
@@ -46,10 +50,15 @@ class NewPoll extends Component {
 	}
 
 	handleSubmit = (e) => {
+		const { createNewPoll, form } = this.props
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
+    form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        createNewPoll({
+					title: values.title,
+					publish: values.publish,
+					pollOptions: values.keys.map(key => values[`option-${key}`])
+				})
       }
     });
   }
@@ -116,9 +125,7 @@ NewPoll.propTypes = {
 const NewPollFormWrapper = Form.create()(NewPoll);
 
 const mapDispatchToProps = (dispatch) => ({
-  // saveSurveys (surveys) {
-  //   return dispatch(saveSurveys(surveys))
-  // },
+  createNewPoll: (pollData) => dispatch(createNewPoll(pollData)),
 })
 
 export default connect(null, mapDispatchToProps)(NewPollFormWrapper);
