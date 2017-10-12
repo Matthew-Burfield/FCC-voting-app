@@ -4,11 +4,15 @@ import PropTypes from 'prop-types'
 
 import jwtDecode from 'jwt-decode'
 import {
+	checkTokenIsValid,
+	getAccessToken,
 	getTokenId,
 } from '../utilities/utils.js'
-import { loginUser } from '../redux/actions/userActions'
+import {
+	loginUser,
+	logoutUser,
+} from '../redux/actions/userActions'
 import { getAllPolls } from '../redux/actions/surveyActions'
-
 
 /**
  * This HOC just decodes the token_id and ensures it's validity. If it's valid, it sets
@@ -31,14 +35,13 @@ class Initialization extends Component {
 		// If there is, validate then, and then log the user in
 		// Check if the access token and id token are in localStorage (i.e. they are already logged in)
 		const tokenId = getTokenId()
+		const accessToken = getAccessToken()
 
 		// validate the tokenId and get the user data
-		try {
-			const decodedToken = jwtDecode(tokenId)
-			// TODO: var isAuthenticated: jwt && (jwt.exp > Date.now() / 1000);
-			loginUser(decodedToken);
-		} catch (InvalidTokenError) {
-			console.log('user is not logged in')
+		if (checkTokenIsValid(tokenId) && checkTokenIsValid(accessToken)) {
+			loginUser(jwtDecode(tokenId))
+		} else {
+			logoutUser()
 		}
 
 		getAllPolls();	
@@ -52,6 +55,7 @@ class Initialization extends Component {
 const mapDispatchToProps = (dispatch) => ({
 	getAllPolls: () => dispatch(getAllPolls()),
 	loginUser: (decodedToken) => dispatch(loginUser(decodedToken)),
+	logoutUser: () => dispatch(logoutUser()),
 })
 
 export default connect(null, mapDispatchToProps)(Initialization)

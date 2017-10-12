@@ -1,3 +1,14 @@
+import jwtDecode from 'jwt-decode'
+
+export const checkTokenIsValid = (token) => {
+	try {
+		const decodedToken = jwtDecode(token)
+		return decodedToken.exp > (Date.now() / 1000)
+	} catch (InvalidTokenError) {
+		return false
+	}
+}
+
 export const getAccessToken = () => {
 	if (window &&
 		window.localStorage &&
