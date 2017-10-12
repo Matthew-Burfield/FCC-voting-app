@@ -9,25 +9,20 @@ import SurveyList from '../components/SurveyList'
 
 class AllPolls extends Component {
 	static propTypes = {
+		isLoading: PropTypes.bool,
 		saveSurveys: PropTypes.func,
 		surveys: PropTypes.array,
 	}
 	static defaultProps = {
+		isLoading: true,
 		surveys: [],
-	}
-	constructor(props) {
-		super(props)
-		this.state = {
-			surveys: [],
-			isLoading: true,
-		}	
 	}
 
 	render() {
 		return (
 			<div>
 				<ContentHeader>All Polls ({ this.props.surveys.length })</ContentHeader>
-				{ this.state.isLoading
+				{ this.props.isLoading
 					?
 						<Spin size="large" />
 					:
@@ -45,7 +40,8 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 const mapStateToProps = (state) => ({
-	surveys: state.surveys
+	isLoading: state.surveys.isLoading,
+	surveys: state.surveys.surveys,
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AllPolls);

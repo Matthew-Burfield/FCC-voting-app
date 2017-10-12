@@ -10,6 +10,7 @@ import {
 	Row,
 	Col,
 } from 'antd'
+import { withRouter } from 'react-router'
 
 import { createNewPoll } from '../redux/actions/surveyActions'
 import DynamicFieldset from '../components/DynamicFieldset'
@@ -38,19 +39,12 @@ class NewPoll extends Component {
 		createNewPoll: PropTypes.func,
 	}
 
-	constructor(props) {
-		super(props)
-		this.state = {
-			isLoading: true,
-		}	
-	}
-
 	handleTitleChange = (e) => {
 		console.log(e)
 	}
 
 	handleSubmit = (e) => {
-		const { createNewPoll, form } = this.props
+		const { createNewPoll, form, history } = this.props
     e.preventDefault();
     form.validateFields((err, values) => {
       if (!err) {
@@ -59,6 +53,8 @@ class NewPoll extends Component {
 					publish: values.publish,
 					pollOptions: values.keys.map(key => values[`option-${key}`])
 				})
+				form.resetFields()
+				history.push('/')
       }
     });
   }
@@ -105,6 +101,8 @@ class NewPoll extends Component {
 }
 
 NewPoll.propTypes = {
+	isLoading: PropTypes.bool,
+	history: PropTypes.object,
 	form: PropTypes.shape({
 		getFieldsValue: PropTypes.func,
 		getFieldValue: PropTypes.func,
@@ -128,4 +126,4 @@ const mapDispatchToProps = (dispatch) => ({
   createNewPoll: (pollData) => dispatch(createNewPoll(pollData)),
 })
 
-export default connect(null, mapDispatchToProps)(NewPollFormWrapper);
+export default connect(null, mapDispatchToProps)(withRouter(NewPollFormWrapper));
