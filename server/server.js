@@ -48,8 +48,12 @@ const unauthorized = (err, req, res, next) => {
 app.get('/surveys', function(req, res) {
 	mongodb.MongoClient.connect(mongoUri, function(err, db) {
 		if (err) throw err
-		db.collection('survey').find({}).toArray(function(err, result) {
-			res.json(result)
+		db.collection('survey').find({}).sort( { datetime: -1 } ).toArray(function(err, result) {
+			const surveysObj = result.reduce((obj, survey) => {
+				obj[survey._id] = survey
+				return obj
+			}, {})
+			res.json(surveysObj)
 			db.close()
 		})
 	})
@@ -133,6 +137,7 @@ app.post('/survey', jwtCheck, unauthorized, function(req, res) {
 	const survey = {
 		title: req.body.title,
 		isPublished: req.body.isPublished,
+		datetime: moment().valueOf(),
 		pollOptions: req.body.pollOptions.map(value => ({
 			title: value,
 			votes: 0,
