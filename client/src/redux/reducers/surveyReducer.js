@@ -5,15 +5,17 @@ import {
 
 const DEFAULT_STORE = {
   isLoading: false,
-  surveys: [],
+  surveys: {},
 }
 
 const saveSurveys = (state, action) => {
-  const newSurveys = [...state.surveys]
-  newSurveys.push(...action.payload)
+  const newSurveyObj = {
+    ...JSON.parse(JSON.stringify(state.surveys)),
+    ...action.payload,
+  }
 	return {
     ...state,
-    surveys: newSurveys,
+    surveys: newSurveyObj,
   }
 }
 

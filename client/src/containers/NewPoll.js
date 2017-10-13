@@ -3,12 +3,13 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import {
 	Button,
-	Input,
-	Icon,
-	Form,
-	Switch,
-	Row,
 	Col,
+	Form,
+	Icon,
+	Input,
+	Row,
+	Spin,
+	Switch,
 } from 'antd'
 import { withRouter } from 'react-router'
 
@@ -37,6 +38,22 @@ const formItemLayout = {
 class NewPoll extends Component {
 	static propTypes = {
 		createNewPoll: PropTypes.func,
+		isLoading: PropTypes.bool,
+	}
+
+	constructor(props) {
+		super(props)
+		this.state = {
+			hasSubmitted: false,
+		}
+	}
+
+	componentWillReceiveProps = (nextProps) => {
+		const { form, history, isLoading } = nextProps
+		if (this.state.hasSubmitted && !isLoading) {
+			form.resetFields()
+			history.push('/')
+		}
 	}
 
 	handleTitleChange = (e) => {
@@ -44,7 +61,7 @@ class NewPoll extends Component {
 	}
 
 	handleSubmit = (e) => {
-		const { createNewPoll, form, history } = this.props
+		const { createNewPoll, form } = this.props
     e.preventDefault();
     form.validateFields((err, values) => {
       if (!err) {
@@ -53,49 +70,53 @@ class NewPoll extends Component {
 					publish: values.publish,
 					pollOptions: values.keys.map(key => values[`option-${key}`])
 				})
-				form.resetFields()
-				history.push('/')
+				this.setState({
+					hasSubmitted: true,
+				})
       }
     });
   }
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
-		return ([
-			<ContentHeader key='pageTitle'>New Poll</ContentHeader>,
-			<Form
+		return (
+			<Spin
 				key='pageForm'
-				onSubmit={ this.handleSubmit }
-				style={ formStyles }
+				spinning={ this.state.hasSubmitted && this.props.isLoading }
 			>
-				<FormItem label='Title' { ...formItemLayout }>
-					{getFieldDecorator('title', {
-					rules: [{ required: true, message: 'You must enter a title!' }],
-					})(
-						<Input
-							prefix={<Icon type='title' style={{ fontSize: 13 }} />}
-							placeholder='Type here...'
-						/>
-					)}
-				</FormItem>
-				<DynamicFieldset form={ this.props.form } formItemLayout={ formItemLayout } />
-				<FormItem
-					label='Publish'
-					{ ...formItemLayout }
+				<ContentHeader>New Poll</ContentHeader>
+				<Form
+					onSubmit={ this.handleSubmit }
+					style={ formStyles }
 				>
-          {getFieldDecorator('publish')(
-						<Switch type='publish'/>
-          )}
-        </FormItem>
-				<Row>
-					<Col span={ 24 } offset={ 4 }>
-						<FormItem { ...formItemLayout }>
-							<Button type="primary" htmlType="submit">Submit</Button>
-						</FormItem>
-					</Col>
-				</Row>
-			</Form>
-		]
+					<FormItem label='Title' { ...formItemLayout }>
+						{getFieldDecorator('title', {
+						rules: [{ required: true, message: 'You must enter a title!' }],
+						})(
+							<Input
+								prefix={<Icon type='title' style={{ fontSize: 13 }} />}
+								placeholder='Type here...'
+							/>
+						)}
+					</FormItem>
+					<DynamicFieldset form={ this.props.form } formItemLayout={ formItemLayout } />
+					<FormItem
+						label='Publish'
+						{ ...formItemLayout }
+					>
+						{getFieldDecorator('publish')(
+							<Switch type='publish'/>
+						)}
+					</FormItem>
+					<Row>
+						<Col span={ 24 } offset={ 4 }>
+							<FormItem { ...formItemLayout }>
+								<Button type="primary" htmlType="submit">Submit</Button>
+							</FormItem>
+						</Col>
+					</Row>
+				</Form>
+			</Spin>
 		)
 	}
 }
@@ -122,8 +143,12 @@ NewPoll.propTypes = {
 
 const NewPollFormWrapper = Form.create()(NewPoll);
 
+const mapStateToProps = (state) => ({
+	isLoading: state.surveys.isLoading,
+})
+
 const mapDispatchToProps = (dispatch) => ({
   createNewPoll: (pollData) => dispatch(createNewPoll(pollData)),
 })
 
-export default connect(null, mapDispatchToProps)(withRouter(NewPollFormWrapper));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(NewPollFormWrapper));

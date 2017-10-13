@@ -16,7 +16,7 @@ class Poll extends Component {
 	static propTypes = {
 		match: PropTypes.object,
 		saveSurveys: PropTypes.func,
-		surveyList: PropTypes.array,
+		survey: PropTypes.object,
 	};
 
 	constructor(props) {
@@ -27,24 +27,6 @@ class Poll extends Component {
 		}
 	}
 
-	componentDidMount() {
-		const { match, saveSurveys, surveyList } = this.props
-		if (surveyList && surveyList.length > 0) {
-			this.setState({
-				survey: surveyList.find(survey => survey._id === match.params.surveyId),
-			})
-		}
-		if ((!surveyList || surveyList.length === 0) && (match.params.surveyId && match.params.surveyId.length > 0)) {
-			this.setState({ isLoading: true })
-			axios
-			.get(`${API_DOMAIN}/survey?id=${match.params.surveyId}`)
-			.then(response => response.data)
-			.then(survey => {
-				saveSurveys(survey)
-				this.setState({ isLoading: false })
-			})
-		}
-	}
 	componentWillReceiveProps(nextProps) {
 		const {
 			match,
@@ -56,6 +38,7 @@ class Poll extends Component {
 			})
 		}
 	}
+
 	render() {
 		const { survey	} = this.state
 		if (!survey) {
@@ -103,7 +86,7 @@ const mapDispatchToProps = (dispatch) => ({
 	saveSurveys: (surveyList) => dispatch(saveSurveys(surveyList)),
 })
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, ownProps) => ({
 	surveyList: state.surveys,
 })
 
