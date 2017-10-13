@@ -17,7 +17,18 @@
 	font-weight: 200px; */
 }
 
-.header-a:hover {
+.header-a:hover, .header-a:active, .header-a:focus {
+	color: white;
+	text-decoration: none;
+}
+
+.header-a-main {
+	color: white;
+	/* font-size: 1rem;
+	font-weight: 200px; */
+}
+
+.header-a-main:hover, .header-a-main:active, .header-a-main:focus {
 	color: white;
 	text-decoration: none;
 }

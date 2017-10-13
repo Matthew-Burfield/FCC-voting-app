@@ -81,7 +81,7 @@ class NewPoll extends Component {
 		const { getFieldDecorator } = this.props.form;
 		return (
 			<Spin
-				key='pageForm'
+				size="large"
 				spinning={ this.state.hasSubmitted && this.props.isLoading }
 			>
 				<ContentHeader>New Poll</ContentHeader>

@@ -9,13 +9,16 @@ const DEFAULT_STORE = {
 }
 
 const saveSurveys = (state, action) => {
-  const newSurveyObj = {
-    ...JSON.parse(JSON.stringify(state.surveys)),
-    ...action.payload,
-  }
+  // This is a quick way to deep clone an object. There are a couple of gotchas however,
+  // 1. Functions don't get copied because the JSON parser can't handle them
+  // 2. Dates object get stuffed up. I'm using UTC format for storing dates though, which is fine.
+  const surveysClone = JSON.parse(JSON.stringify(state.surveys))
 	return {
     ...state,
-    surveys: newSurveyObj,
+    surveys: {
+      ...surveysClone,
+      ...action.payload,
+    },
   }
 }
 

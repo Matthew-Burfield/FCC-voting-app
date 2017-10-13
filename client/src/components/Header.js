@@ -1,15 +1,16 @@
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import React from 'react'
-
-import { Header } from 'antd/lib/layout'
-import Menu from 'antd/lib/menu'
-import 'antd/lib/menu/style/css'
-import 'antd/lib/layout/style/css'
+import { Layout, Menu } from 'antd'
 
 import HeaderLink from './HeaderLink'
 import HeaderLogin from './HeaderLogin'
 import UserProfile from './UserProfile'
+
+import './Header.css'
+
+const { Header } = Layout
 
 const menuStyles = {
 	lineHeight: '64px',
@@ -26,7 +27,7 @@ const HeaderContainer = (props) => (
 			padding: 15,
 			fontSize: 31,
 			color: '#fff',
-		}}>FCC Voting App</div>
+		}}><Link to={'/'} className='header-a-main'>FCC Voting App</Link></div>
 		<Menu
 			theme="dark"
 			mode="horizontal"

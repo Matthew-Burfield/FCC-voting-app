@@ -1,36 +1,31 @@
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import React, { Component } from 'react'
+import React from 'react'
 import { Spin } from 'antd'
 
 import ContentHeader from '../components/ContentHeader'
 import { saveSurveys } from '../redux/actions/surveyActions'
 import SurveyList from '../components/SurveyList'
 
-class AllPolls extends Component {
-	static propTypes = {
-		isLoading: PropTypes.bool,
-		saveSurveys: PropTypes.func,
-		surveys: PropTypes.array,
-	}
-	static defaultProps = {
-		isLoading: true,
-		surveys: [],
-	}
+const AllPolls = ({ isLoading, surveys }) => (
+	<Spin
+		size="large"
+		spinning={ isLoading }
+	>
+		<ContentHeader>All Polls ({ Object.keys(surveys).length })</ContentHeader>
+		<SurveyList surveys={ Object.values(surveys) } />
+	</Spin>
+)
 
-	render() {
-		return (
-			<div>
-				<ContentHeader>All Polls ({ this.props.surveys.length })</ContentHeader>
-				{ this.props.isLoading
-					?
-						<Spin size="large" />
-					:
-						<SurveyList surveys={ this.props.surveys } />
-				}
-			</div>
-		)
-	}
+AllPolls.propTypes = {
+	isLoading: PropTypes.bool,
+	saveSurveys: PropTypes.func,
+	surveys: PropTypes.object,
+}
+
+AllPolls.defaultProps = {
+	isLoading: true,
+	surveys: {},
 }
 
 const mapDispatchToProps = (dispatch) => ({

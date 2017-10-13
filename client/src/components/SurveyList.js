@@ -1,10 +1,11 @@
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import React from 'react';
-import { Row, Col } from 'antd/lib/grid'
-import Card from 'antd/lib/card'
-import 'antd/lib/card/style/css'
-import 'antd/lib/grid/style/css'
-
+import {
+  Card,
+  Col,
+  Row,
+} from 'antd'
 import PieChart from './PieChart'
 
 const SurveyList = ({ surveys }) => (
@@ -37,5 +38,9 @@ const SurveyList = ({ surveys }) => (
     ))}
   </Row>
 );
+
+SurveyList.propTypes = {
+  surveys: PropTypes.array,
+}
 
 export default SurveyList;

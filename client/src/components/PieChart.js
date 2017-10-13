@@ -24,12 +24,24 @@ class PieChart extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      data: [{angle: 0},{angle: 0},{angle: 0}]
+      data: [{angle: 0},{angle: 0},{angle: 0}],
+      timeout: '',
     }
   }
 	
   componentDidMount() {
-    setTimeout(this.addDataToChart, 1000)
+    // Save a reference to the timeout in state. If the user unmounts this component
+    // before the timeout finishes, we'll need to clear it.
+    const timeout = setTimeout(this.addDataToChart, 1000)
+    this.setState({
+      timeout,
+    })
+  }
+
+  componentWillUnmount() {
+    // Need to clear out the timeout if the user unmounts the component before
+    // the timeout finishes
+    clearTimeout(this.state.timeout)
   }
 
   addDataToChart = () => {

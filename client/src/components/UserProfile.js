@@ -1,11 +1,8 @@
 
-import Avatar from 'antd/lib/avatar'
+import { Avatar } from 'antd'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React from 'react'
-
-import 'antd/lib/avatar/style/css'
-
 
 const UserProfile = ({ username, profileImage }) => (
 	<div>
