@@ -134,20 +134,17 @@ app.post('/comment', jwtCheck, unauthorized, function(req, res) {
 })
 
 app.post('/survey', jwtCheck, unauthorized, function(req, res) {
-	const surveyDefaults = {
+	const survey = {
 		comments: [],
 		datetime: moment().valueOf(),
 		isDeleted: 0,
-		usersVoted: [],
-	}
-	const survey = {
 		isPublished: req.body.isPublished,
 		pollOptions: req.body.pollOptions.map(value => ({
 			title: value,
 			votes: 0,
 		})),
 		title: req.body.title,
-		...surveyDefaults,
+		usersVoted: [],
 	}
 	mongodb.MongoClient.connect(mongoUri, function(err, db) {
 		if (err) returnError(res, err)
