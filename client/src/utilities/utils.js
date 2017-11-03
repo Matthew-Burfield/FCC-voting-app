@@ -30,6 +30,11 @@ export const getTokenId = () => {
 	return null
 }
 
+export const getUserId = () => {
+	const token_id = jwtDecode(getTokenId())
+	return token_id.sub
+}
+
 export const removeLocalTokens = () => {
 	if (window &&
 		window.localStorage &&
@@ -54,7 +59,11 @@ export const saveTokensToLocalStorage = () => {
 				[item[0]]: item[1],
 			}
 		}, {})
-		window.location.hash = '';
+		window.location.hash = ''
 		window.localStorage.fccvotingapp = JSON.stringify(loginTokens)
 	}
+}
+
+export const userHasVotedOn = (pollId) => {
+	return false
 }

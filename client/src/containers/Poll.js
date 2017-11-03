@@ -21,7 +21,11 @@ const Poll = ({ authenticated, isLoading, survey }) => {
 	return (
 		<div style={{ height: '100vh' }}>
 			<ContentHeader>{ survey.title }</ContentHeader>
-			<DisplayVotes pollOptions={ survey.pollOptions } />
+			<DisplayVotes
+				authenticated={ authenticated }
+				pollId={ survey.id }
+				pollOptions={ survey.pollOptions }
+			/>
 			<PieChart data={ survey.pollOptions } width={ 400 } height={ 400 } />
 			<div>
 				<h2>Comments</h2>
