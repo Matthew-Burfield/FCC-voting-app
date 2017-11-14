@@ -1,10 +1,13 @@
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Button } from 'antd'
 
-import { userHasVotedOn } from '../utilities/utils'
+import { voteOnPoll } from '../redux/actions/surveyActions'
+import { userHasVoted } from '../utilities/utils'
 
-const DisplayVotes = ({ pollId, pollOptions, usersVoted }) => (
+
+const DisplayVotes = ({ authenticated, pollId, pollOptions, voteOnPoll }) => (
 	<div
 		style={{
 			fontSize: 20,
@@ -12,14 +15,20 @@ const DisplayVotes = ({ pollId, pollOptions, usersVoted }) => (
 		}}
 	>
 		{
-			pollOptions.map(option => (
+			pollOptions.map((option, index) => (
 				<div key={ option.title }>
-					<p>{ `${ option.title }` }:</p>
-					{
-						userHasVotedOn(pollId) ?
-							<p>{ `${ option.votes } ${ option.votes === 1 ? 'vote' : 'votes' }` }</p> :
-							<Button />
-					}
+					<div>
+						<p>{ `${ option.title }` }:</p>
+						{
+							userHasVoted(pollId) ?
+								<p>{ `${ option.votes } ${ option.votes === 1 ? 'vote' : 'votes' }` }</p> :
+								<Button
+									onClick={ () => voteOnPoll(pollId, index) }
+								>
+									vote
+								</Button>
+						}
+					</div>
 				</div>
 			))
 		}
@@ -30,6 +39,11 @@ DisplayVotes.propTypes = {
 	authenticated: PropTypes.bool,
 	pollId: PropTypes.string,
 	pollOptions: PropTypes.array,
+	voteOnPoll: PropTypes.func,
 }
 
-export default DisplayVotes;
+const mapDispatchToProps = (dispatch) => ({
+	voteOnPoll: (pollId, optionIndex) => dispatch(voteOnPoll(pollId, optionIndex)),
+})
+
+export default connect(null, mapDispatchToProps)(DisplayVotes)

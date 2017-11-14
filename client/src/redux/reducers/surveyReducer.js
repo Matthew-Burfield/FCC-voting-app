@@ -1,11 +1,18 @@
 import {
   SAVE_SURVEYS,
   IS_LOADING,
+  INCREASE_VOTE,
 } from '../actions/surveyActions'
 
 const DEFAULT_STORE = {
   isLoading: false,
   surveys: {},
+}
+
+const increaseVote = (state, action) => {
+  const stateClone = JSON.parse(JSON.stringify(state))
+  stateClone.surveys[action.payload.pollId].pollOptions[action.payload.optionIndex].votes++
+  return stateClone
 }
 
 const saveSurveys = (state, action) => {
@@ -35,6 +42,8 @@ export default (state = DEFAULT_STORE, action) => {
       return setIsLoading(state, action)
     case SAVE_SURVEYS:
       return saveSurveys(state, action)
+    case INCREASE_VOTE:
+      return increaseVote(state, action)
     default:
       return state
   }

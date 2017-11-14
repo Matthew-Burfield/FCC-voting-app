@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { Spin } from 'antd'
 
+import Comments from '../components/Comments'
 import ContentHeader from '../components/ContentHeader'
 import DisplayVotes from '../components/DisplayVotes'
 import PieChart from '../components/PieChart'
@@ -23,32 +24,15 @@ const Poll = ({ authenticated, isLoading, survey }) => {
 			<ContentHeader>{ survey.title }</ContentHeader>
 			<DisplayVotes
 				authenticated={ authenticated }
-				pollId={ survey.id }
+				pollId={ survey._id }
 				pollOptions={ survey.pollOptions }
 			/>
 			<PieChart data={ survey.pollOptions } width={ 400 } height={ 400 } />
-			<div>
-				<h2>Comments</h2>
-				<div>
-					{
-						survey.comments.map(comment => (
-							<div key={ comment.datetime }>
-								<p>{ comment.value }</p>
-								<p>{ comment.datetime }</p>
-							</div>
-						))
-					}
-				</div>
-					{ !authenticated &&
-						<div>
-							<div>
-								Please log in to leave a comment
-							</div>
-							<button disabled>Add comment</button>
-					}
-						</div>
-					}
-			</div>
+			<Comments
+				authenticated={ authenticated }
+				data={ survey.comments }
+				pollId={ survey._id }
+			/>
 		</div>
 	)
 }

@@ -1,4 +1,5 @@
 import jwtDecode from 'jwt-decode'
+import moment from 'moment'
 
 export const checkTokenIsValid = (token) => {
 	try {
@@ -64,6 +65,24 @@ export const saveTokensToLocalStorage = () => {
 	}
 }
 
-export const userHasVotedOn = (pollId) => {
-	return false
+export const saveVoteToLocalStorage = (pollId, optionsIndex) => {
+	if (window && window.localStorage) {
+		if (!window.localStorage.votedPolls) {
+			window.localStorage.votedPolls = JSON.stringify({})
+		}
+		const votes = JSON.parse(window.localStorage.votedPolls)
+		votes[pollId] = {
+			optionVotedFor: optionsIndex,
+			date: moment.now()
+		}
+		window.localStorage.votedPolls = JSON.stringify(votes)
+	}
+}
+
+
+export const userHasVoted = (pollId) => {
+	if (window && window.localStorage && window.localStorage.votedPolls) {
+		return JSON.parse(window.localStorage.votedPolls)[pollId]
+	}
+	return void 0
 }

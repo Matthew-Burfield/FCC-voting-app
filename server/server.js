@@ -77,8 +77,8 @@ app.get('/survey', function(req, res) {
 })
 
 app.post('/vote', function(req, res) {
-	const id = req.body.surveyId
-	const vote = `pollOptions.${req.body.pollOptionIndex}.votes`
+	const id = req.body.pollId
+	const vote = `pollOptions.${req.body.optionIndex}.votes`
 	mongodb.MongoClient.connect(mongoUri, function(err, db) {
 		if (err) returnError(res, err)
 		db.collection('survey').update(
@@ -119,6 +119,7 @@ app.post('/comment', jwtCheck, unauthorized, function(req, res) {
 		value: req.body.comment,
 		datetime: moment().valueOf(),
 	}
+	console.log(id, comment.value, comment.datetime)
 	mongodb.MongoClient.connect(mongoUri, function(err, db) {
 		if (err) returnError(res, err)
 		db.collection('survey').update(
