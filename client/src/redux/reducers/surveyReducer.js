@@ -1,4 +1,5 @@
 import {
+  ADD_COMMENT,
   SAVE_SURVEYS,
   IS_LOADING,
   INCREASE_VOTE,
@@ -8,6 +9,22 @@ import {
 const DEFAULT_STORE = {
   isLoading: false,
   surveys: {},
+}
+
+const addComment = (state, action) => {
+  const surveysClone = JSON.parse(JSON.stringify(state.surveys))
+  if (surveysClone && surveysClone[action.payload.id] && surveysClone[action.payload.id].comments) {
+    surveysClone[action.payload.id].comments.push({
+      value: action.payload.comment,
+      datetime: action.payload.datetime,
+    })
+  }
+	return {
+    ...state,
+    surveys: {
+      ...surveysClone,
+    },
+  }
 }
 
 const increaseVote = (state, action) => {
@@ -61,6 +78,8 @@ export default (state = DEFAULT_STORE, action) => {
       return increaseVote(state, action)
     case REMOVE_SURVEY:
       return removeSurvey(state, action)
+    case ADD_COMMENT:
+      return addComment(state, action)
     default:
       return state
   }

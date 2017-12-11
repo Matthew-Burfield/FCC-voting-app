@@ -42,6 +42,11 @@ const Poll = ({ authenticated, deletePoll, history, isLoading, survey, userId })
 					<button onClick={ handleDelete }>Delete survey</button> :
 					null
 			}
+			{
+				authenticated ?
+					<button onClick={ () => {} }>Add new poll option</button> :
+					null
+			}
 			<PieChart data={ survey.pollOptions } width={ 400 } height={ 400 } />
 			<Comments
 				authenticated={ authenticated }

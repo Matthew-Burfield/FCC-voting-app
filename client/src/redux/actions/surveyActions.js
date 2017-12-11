@@ -5,10 +5,22 @@ import {
   saveVoteToLocalStorage,
 } from '../../utilities/utils'
 
+export const ADD_COMMENT = 'ADD_COMMENT'
 export const SAVE_SURVEYS = 'SAVE_SURVEYS'
 export const IS_LOADING = 'IS_LOADING'
 export const INCREASE_VOTE = 'INCREASE_VOTE'
 export const REMOVE_SURVEY = 'REMOVE_SURVEY'
+
+const addCommentToSurvey = ({ comment, datetime, surveyId }) => {
+  return {
+    type: ADD_COMMENT,
+    payload: {
+      comment,
+      datetime,
+      id: surveyId,
+    }
+  }
+}
 
 export const createNewComment = (commentData) => {
   return dispatch => {
@@ -24,7 +36,7 @@ export const createNewComment = (commentData) => {
     .then(data => {
       dispatch(isLoading(false))
       if (data.success) {
-        dispatch(saveSurveys({ [data.survey._id]: data.survey }))
+        dispatch(addCommentToSurvey({ ...commentData, datetime: data.datetime }))
       }
       else {
         // TODO

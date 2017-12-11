@@ -127,6 +127,7 @@ app.post('/comment', jwtCheck, unauthorized, function(req, res) {
 			db.close()
 			res.json({
 				success: true,
+				datetime: comment.datetime,
 			})
 		})
 	})
