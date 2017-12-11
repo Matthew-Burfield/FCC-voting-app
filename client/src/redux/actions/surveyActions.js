@@ -61,7 +61,7 @@ export const createNewPoll = (pollData) => {
 export const deletePoll = (pollId) => {
   return dispatch => {
     dispatch(isLoading(true))
-    axios
+    return axios
     .post(`${API_DOMAIN}/survey`, {
       id: pollId,
       isDeleted: true,
@@ -75,6 +75,7 @@ export const deletePoll = (pollId) => {
     .then(results => {
       dispatch(removeSurveyFromState(pollId))
       dispatch(isLoading(false))
+      return results
     })
   }
 }

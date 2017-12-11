@@ -2,14 +2,22 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Spin } from 'antd'
+import { withRouter } from 'react-router-dom'
 
 import Comments from '../components/Comments'
 import ContentHeader from '../components/ContentHeader'
 import DisplayVotes from '../components/DisplayVotes'
 import PieChart from '../components/PieChart'
-import { deletePoll } from '../redux/actions/surveyActions';
+import { deletePoll } from '../redux/actions/surveyActions'
 
-const Poll = ({ authenticated, deletePoll, isLoading, survey, userId }) => {
+const deletePollFactory = (deletePoll, surveyId, history) => () => {
+	deletePoll(surveyId).then((results) => {
+		console.log(results)
+		history.push('')
+	})
+}
+
+const Poll = ({ authenticated, deletePoll, history, isLoading, survey, userId }) => {
 	if (isLoading) {
 		return (
 			<Spin size="large" spinning={ isLoading || !survey }>
@@ -20,6 +28,7 @@ const Poll = ({ authenticated, deletePoll, isLoading, survey, userId }) => {
 	if (!survey) {
 		return <h1>Something went wrong and we can't find this survey. Go back and try again</h1>
 	}
+	const handleDelete = deletePollFactory(deletePoll, survey._id, history)
 	return (
 		<div style={{ height: '100vh' }}>
 			<ContentHeader>{ survey.title }</ContentHeader>
@@ -30,7 +39,7 @@ const Poll = ({ authenticated, deletePoll, isLoading, survey, userId }) => {
 			/>
 			{
 				authenticated && userId === survey.createdBy ?
-					<button onClick={ () => deletePoll(survey._id) }>Delete survey</button> :
+					<button onClick={ handleDelete }>Delete survey</button> :
 					null
 			}
 			<PieChart data={ survey.pollOptions } width={ 400 } height={ 400 } />
@@ -67,5 +76,5 @@ const mapStateToProps = (state, ownProps) => {
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Poll);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Poll));
 
