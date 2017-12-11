@@ -65,7 +65,6 @@ app.get('/survey', function(req, res) {
 		db.collection('survey').find({
 			_id: mongodb.ObjectId(req.query.id),
 		}).toArray(function(err, result) {
-			console.log(req.query.id, result)
 			if (result.length > 0) {
 				res.json(result)
 			} else {
@@ -119,7 +118,6 @@ app.post('/comment', jwtCheck, unauthorized, function(req, res) {
 		value: req.body.comment,
 		datetime: moment().valueOf(),
 	}
-	console.log(id, comment.value, comment.datetime)
 	mongodb.MongoClient.connect(mongoUri, function(err, db) {
 		if (err) returnError(res, err)
 		db.collection('survey').update(
@@ -135,29 +133,44 @@ app.post('/comment', jwtCheck, unauthorized, function(req, res) {
 })
 
 app.post('/survey', jwtCheck, unauthorized, function(req, res) {
-	const survey = {
-		comments: [],
-		datetime: moment().valueOf(),
-		isDeleted: 0,
-		isPublished: req.body.isPublished,
-		pollOptions: req.body.pollOptions.map(value => ({
-			title: value,
-			votes: 0,
-		})),
-		title: req.body.title,
-		usersVoted: [],
-	}
-	mongodb.MongoClient.connect(mongoUri, function(err, db) {
-		if (err) returnError(res, err)
-		db.collection('survey').insertOne(survey, function(err, result) {
+	if (req.body.isDeleted) {
+		if (!req.body.id) {
+			returnError(res, 'Must provide the id of the survey to delete')
+		}
+		mongodb.MongoClient.connect(mongoUri, function(err, db) {
 			if (err) returnError(res, err)
+			db.collection('survey').deleteOne({ "_id" : mongodb.ObjectId(req.body.id) })
 			db.close()
 			res.json({
 				success: true,
-				survey,
 			})
 		})
-	})
+	} else {
+		const survey = {
+			comments: [],
+			datetime: moment().valueOf(),
+			isDeleted: 0,
+			isPublished: req.body.publish,
+			pollOptions: req.body.pollOptions.map(value => ({
+				title: value,
+				votes: 0,
+			})),
+			title: req.body.title,
+			usersVoted: [],
+			createdBy: req.user.sub,
+		}
+		mongodb.MongoClient.connect(mongoUri, function(err, db) {
+			if (err) returnError(res, err)
+			db.collection('survey').insertOne(survey, function(err, result) {
+				if (err) returnError(res, err)
+				db.close()
+				res.json({
+					success: true,
+					survey,
+				})
+			})
+		})
+	}
 })
 
 app.listen(8000, () => console.log('Example app listening on port 8000!'))
