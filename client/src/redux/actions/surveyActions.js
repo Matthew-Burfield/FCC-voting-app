@@ -8,6 +8,7 @@ import {
 export const SAVE_SURVEYS = 'SAVE_SURVEYS'
 export const IS_LOADING = 'IS_LOADING'
 export const INCREASE_VOTE = 'INCREASE_VOTE'
+export const REMOVE_SURVEY = 'REMOVE_SURVEY'
 
 export const createNewComment = (commentData) => {
   return dispatch => {
@@ -57,6 +58,27 @@ export const createNewPoll = (pollData) => {
   }
 }
 
+export const deletePoll = (pollId) => {
+  return dispatch => {
+    dispatch(isLoading(true))
+    axios
+    .post(`${API_DOMAIN}/survey`, {
+      id: pollId,
+      isDeleted: true,
+    }, {
+      headers: {
+        authorization: `Bearer ${getAccessToken()}`,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.data)
+    .then(results => {
+      dispatch(removeSurveyFromState(pollId))
+      dispatch(isLoading(false))
+    })
+  }
+}
+
 export const getAllPolls = () => {
   return dispatch => {
     dispatch(isLoading(true))
@@ -99,6 +121,15 @@ export const increaseVote = (pollId, optionIndex) => {
     payload: {
       pollId,
       optionIndex,
+    }
+  }
+}
+
+const removeSurveyFromState = (id) => {
+  return {
+    type: REMOVE_SURVEY,
+    payload: {
+      id,
     }
   }
 }

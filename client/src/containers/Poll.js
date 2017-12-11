@@ -7,8 +7,9 @@ import Comments from '../components/Comments'
 import ContentHeader from '../components/ContentHeader'
 import DisplayVotes from '../components/DisplayVotes'
 import PieChart from '../components/PieChart'
+import { deletePoll } from '../redux/actions/surveyActions';
 
-const Poll = ({ authenticated, isLoading, survey }) => {
+const Poll = ({ authenticated, deletePoll, isLoading, survey, userId }) => {
 	if (isLoading) {
 		return (
 			<Spin size="large" spinning={ isLoading || !survey }>
@@ -27,6 +28,11 @@ const Poll = ({ authenticated, isLoading, survey }) => {
 				pollId={ survey._id }
 				pollOptions={ survey.pollOptions }
 			/>
+			{
+				authenticated && userId === survey.createdBy ?
+					<button onClick={ () => deletePoll(survey._id) }>Delete survey</button> :
+					null
+			}
 			<PieChart data={ survey.pollOptions } width={ 400 } height={ 400 } />
 			<Comments
 				authenticated={ authenticated }
@@ -48,13 +54,18 @@ Poll.default = {
 	isLoading: true,
 }
 
+const mapDispatchToProps = (dispatch) => ({
+	deletePoll: (pollId) => dispatch(deletePoll(pollId)),
+});
+
 const mapStateToProps = (state, ownProps) => {
 	return {
+		authenticated: state.user.authenticated,
 		isLoading: state.surveys.isLoading,
 		survey: state.surveys.surveys[ownProps.match.params.surveyId],
-		authenticated: state.user.authenticated,
+		userId: state.user.sub,
 	}
 }
 
-export default connect(mapStateToProps)(Poll);
+export default connect(mapStateToProps, mapDispatchToProps)(Poll);
 

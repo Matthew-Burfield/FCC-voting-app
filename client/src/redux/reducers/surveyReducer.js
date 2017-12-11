@@ -2,6 +2,7 @@ import {
   SAVE_SURVEYS,
   IS_LOADING,
   INCREASE_VOTE,
+  REMOVE_SURVEY,
 } from '../actions/surveyActions'
 
 const DEFAULT_STORE = {
@@ -29,6 +30,20 @@ const saveSurveys = (state, action) => {
   }
 }
 
+const removeSurvey = (state, action) => {
+  // This is a quick way to deep clone an object. There are a couple of gotchas however,
+  // 1. Functions don't get copied because the JSON parser can't handle them
+  // 2. Dates object get stuffed up. I'm using UTC format for storing dates though, which is fine.
+  const surveysClone = JSON.parse(JSON.stringify(state.surveys))
+  delete surveysClone[action.payload.id]
+	return {
+    ...state,
+    surveys: {
+      ...surveysClone,
+    },
+  }
+}
+
 const setIsLoading = (state, action) => {
   return {
     ...state,
@@ -44,6 +59,8 @@ export default (state = DEFAULT_STORE, action) => {
       return saveSurveys(state, action)
     case INCREASE_VOTE:
       return increaseVote(state, action)
+    case REMOVE_SURVEY:
+      return removeSurvey(state, action)
     default:
       return state
   }
