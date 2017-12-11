@@ -41,7 +41,7 @@ const HeaderContainer = (props) => (
 		}
 		{ props.isAuthenticated &&
 			<Menu.Item key="newpoll">
-				<HeaderLink to='newpoll' label='Create new poll' />
+				<HeaderLink to='/newpoll' label='Create new poll' />
 			</Menu.Item>
 		}
 		<Menu.Item key="logout">
