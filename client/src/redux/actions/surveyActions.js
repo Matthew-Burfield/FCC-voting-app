@@ -23,7 +23,7 @@ export const createNewComment = (commentData) => {
     .then(data => {
       dispatch(isLoading(false))
       if (data.success) {
-        dispatch(saveSurveys([data.survey]))
+        dispatch(saveSurveys({ [data.survey._id]: data.survey }))
       }
       else {
         // TODO
@@ -47,7 +47,7 @@ export const createNewPoll = (pollData) => {
     .then(data => {
       dispatch(isLoading(false))
       if (data.success) {
-        dispatch(saveSurveys([data.survey]))
+        dispatch(saveSurveys({ [data.survey._id]: data.survey }))
       }
       else {
         // TODO
