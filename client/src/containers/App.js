@@ -31,6 +31,7 @@ class App extends Component {
 							<Route path="/mypolls" component={ MyPolls }/>
 							<Route path="/poll/:surveyId" component={ Poll }/>
 							<Route path="/newpoll" component={ NewPoll }/>
+							<Route path="/editpoll/:surveyId" component={ NewPoll }/>
 						</Content>
 					</Layout>
 				</Security>

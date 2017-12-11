@@ -147,6 +147,7 @@ app.post('/survey', jwtCheck, unauthorized, function(req, res) {
 			})
 		})
 	} else {
+		console.log(req.body)
 		const survey = {
 			comments: [],
 			datetime: moment().valueOf(),

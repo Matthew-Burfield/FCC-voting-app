@@ -33,7 +33,13 @@ const formItemLayout = {
 		xs: { span: 24 },
 		sm: { span: 16 },
 	},
-};
+}
+
+const defaultSurveyFieldValues = {
+	title: '',
+	isPublished: '',
+	pollOptions: []
+}
 
 class NewPoll extends Component {
 	static propTypes = {
@@ -67,7 +73,7 @@ class NewPoll extends Component {
       if (!err) {
         createNewPoll({
 					title: values.title,
-					publish: values.publish,
+					publish: !!values.publish,
 					pollOptions: values.keys.map(key => values[`option-${key}`])
 				})
 				this.setState({
@@ -79,6 +85,11 @@ class NewPoll extends Component {
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
+		const {
+			title,
+			isPublished,
+			pollOptions,
+		} = this.props.survey || defaultSurveyFieldValues
 		return (
 			<Spin
 				size="large"
@@ -91,7 +102,8 @@ class NewPoll extends Component {
 				>
 					<FormItem label='Title' { ...formItemLayout }>
 						{getFieldDecorator('title', {
-						rules: [{ required: true, message: 'You must enter a title!' }],
+							rules: [{ required: true, message: 'You must enter a title!' }],
+							initialValue: title,
 						})(
 							<Input
 								prefix={<Icon type='title' style={{ fontSize: 13 }} />}
@@ -99,12 +111,14 @@ class NewPoll extends Component {
 							/>
 						)}
 					</FormItem>
-					<DynamicFieldset form={ this.props.form } formItemLayout={ formItemLayout } />
+					<DynamicFieldset form={ this.props.form } formItemLayout={ formItemLayout } initialValue={ pollOptions } />
 					<FormItem
 						label='Publish'
 						{ ...formItemLayout }
 					>
-						{getFieldDecorator('publish')(
+						{getFieldDecorator('publish', {
+							initialValue: isPublished,
+						})(
 							<Switch type='publish'/>
 						)}
 					</FormItem>
@@ -139,12 +153,30 @@ NewPoll.propTypes = {
 		resetFields: PropTypes.func,
 		getFieldDecorator: PropTypes.func,
 	}),
+	survey: PropTypes.shape({
+		_id: PropTypes.string.isRequired,
+		comments: PropTypes.arrayOf(PropTypes.shape({
+			comment: PropTypes.string.isRequired,
+			datetime: PropTypes.number.isRequired,
+		})).isRequired,
+		datetime: PropTypes.number.isRequired,
+		isDeleted: PropTypes.number.isRequired,
+		isPublished: PropTypes.bool.isRequired,
+		pollOptions: PropTypes.arrayOf(PropTypes.shape({
+			title: PropTypes.string.isRequired,
+			votes: PropTypes.number.isRequired,
+		})).isRequired,
+		title: PropTypes.string.isRequired,
+		usersVoted: PropTypes.arrayOf(PropTypes.string).isRequired,
+		createdBy: PropTypes.string.isRequired,
+	})
 }
 
 const NewPollFormWrapper = Form.create()(NewPoll);
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, ownProps) => ({
 	isLoading: state.surveys.isLoading,
+	survey: state.surveys.surveys[ownProps.match.params.surveyId],
 })
 
 const mapDispatchToProps = (dispatch) => ({

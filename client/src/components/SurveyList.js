@@ -10,32 +10,35 @@ import PieChart from './PieChart'
 
 const SurveyList = ({ surveys }) => (
   <Row>
-    {surveys.map(survey => (
-      <Col
-        key={ survey._id }
-        span={ 8 }
-        style={{ padding: 8 }}
-      >
-        <Link
-          to={ `/poll/${survey._id}` }
+    {surveys.map(survey => {
+      const subRoute = survey.isPublished ? 'poll' : 'editpoll'
+      return (
+        <Col
+          key={ survey._id }
+          span={ 8 }
+          style={{ padding: 8 }}
         >
-          <Card
-            title={ survey.title }
-            bordered={false}
-            style={{
-              backgroundColor: '#404040',
-              color: '#fff',
-            }}
+          <Link
+            to={ `/${subRoute}/${survey._id}` }
           >
-            <PieChart
-              data={ survey.pollOptions }
-              width={200}
-              height={200}
-            />
-          </Card>
-        </Link>
-      </Col>
-    ))}
+            <Card
+              title={ survey.title }
+              bordered={false}
+              style={{
+                backgroundColor: '#404040',
+                color: '#fff',
+              }}
+            >
+              <PieChart
+                data={ survey.pollOptions }
+                width={200}
+                height={200}
+              />
+            </Card>
+          </Link>
+        </Col>
+      )
+    })}
   </Row>
 );
 

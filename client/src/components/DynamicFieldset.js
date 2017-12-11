@@ -7,12 +7,6 @@ import {
 	Row,
 	Col,
 } from 'antd'
-// import Input from 'antd/lib/input'
-// import Icon from 'antd/lib/icon'
-// import Form from 'antd/lib/form'
-// import Button from 'antd/lib/button'
-// import Row from 'antd/lib/row'
-// import Col from 'antd/lib/col'
 
 const FormItem = Form.Item
 
@@ -67,8 +61,9 @@ class DynamicFieldset extends Component {
 	}
 
 	render() {
-		const { form, formItemLayout } = this.props
-		form.getFieldDecorator('keys', { initialValue: [] });
+		const { form, formItemLayout, initialValue } = this.props
+		const init = ['one','two','three']
+		form.getFieldDecorator('keys', { initialValue: init });
 		const keys = form.getFieldValue('keys')
 		return (
 			<div>

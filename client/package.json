@@ -15,7 +15,7 @@
     "react-scripts": "1.0.14"
   },
   "dependencies": {
-    "antd": "^2.13.4",
+    "antd": "^3.0.1",
     "axios": "^0.16.2",
     "glamorous": "^4.9.7",
     "jsrsasign": "^8.0.4",
