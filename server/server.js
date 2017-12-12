@@ -53,8 +53,8 @@ app.get('/surveys', function(req, res) {
 				obj[survey._id] = survey
 				return obj
 			}, {})
-			res.json(surveysObj)
 			db.close()
+			res.json(surveysObj)
 		})
 	})
 })
@@ -83,11 +83,14 @@ app.post('/vote', function(req, res) {
 		db.collection('survey').update(
 			{ _id: mongodb.ObjectID(id) },
 			{ $inc: { [vote]: 1 }}, function(err, result) {
-			if (err) returnError(res, err)
 			db.close()
-			res.json({
-				success: true,
-			})
+			if (err) {
+				returnError(res, err)
+			} else {
+				res.json({
+					success: true,
+				})
+			}
 		})
 	})
 })
@@ -103,11 +106,14 @@ app.post('/addPollOption', jwtCheck, unauthorized, function(req, res) {
 		db.collection('survey').update(
 			{ _id: mongodb.ObjectID(id) },
 			{ $push: { pollOptions: pollOption } }, function(err, result) {
-			if (err) returnError(res, err)
 			db.close()
-			res.json({
-				success: true,
-			})
+			if (err) {
+				returnError(res, err)
+			} else {
+				res.json({
+					success: true,
+				})
+			}
 		})
 	})
 })
@@ -120,56 +126,92 @@ app.post('/comment', jwtCheck, unauthorized, function(req, res) {
 	}
 	mongodb.MongoClient.connect(mongoUri, function(err, db) {
 		if (err) returnError(res, err)
-		db.collection('survey').update(
+		db.collection('survey').updateOne(
 			{ _id: mongodb.ObjectID(id) },
 			{ $push: { comments: comment }}, function(err, result) {
-			if (err) returnError(res, err)
-			db.close()
-			res.json({
-				success: true,
-				datetime: comment.datetime,
-			})
+				db.close()			
+				if (err) {
+					returnError(res, err)
+				} else {
+					res.json({
+						success: true,
+						datetime: comment.datetime,
+					})
+				}
 		})
 	})
 })
 
+const getCompleteSurvey = (title, options, isPublished, user) => ({
+	comments: [],
+	datetime: moment().valueOf(),
+	isDeleted: 0,
+	isPublished,
+	pollOptions: options.map(value => ({
+		title: value,
+		votes: 0,
+	})),
+	title,
+	usersVoted: [],
+	createdBy: user,
+})
+
 app.post('/survey', jwtCheck, unauthorized, function(req, res) {
+	console.log('enter')
 	if (req.body.isDeleted) {
+		// Has the delete flag. Enter the delete flow
 		if (!req.body.id) {
 			returnError(res, 'Must provide the id of the survey to delete')
 		}
+		console.log('deleting survey: ', req.body.id)
 		mongodb.MongoClient.connect(mongoUri, function(err, db) {
 			if (err) returnError(res, err)
-			db.collection('survey').deleteOne({ "_id" : mongodb.ObjectId(req.body.id) })
+			db.collection('survey').deleteOne({ _id: mongodb.ObjectId(req.body.id) })
 			db.close()
 			res.json({
 				success: true,
 			})
 		})
+	} else if (req.body.id) {
+		// This survey already has an ID. Enter the update flow
+		console.log('editing survey: ', req.body.id)
+		const survey = getCompleteSurvey(req.body.title, req.body.pollOptions, req.body.publish, req.user.sub)
+		mongodb.MongoClient.connect(mongoUri, function(err, db) {
+			if (err) returnError(res, err)
+			db.collection('survey').updateOne({ _id: mongodb.ObjectID(req.body.id) }, survey, function(err, result) {
+				db.close()
+				if (err) {
+					returnError(res, err)
+				} else {
+					survey._id = req.body.id
+					res.json({
+						success: true,
+						survey,
+					})
+				}
+			})
+		})
 	} else {
-		console.log(req.body)
-		const survey = {
-			comments: [],
-			datetime: moment().valueOf(),
-			isDeleted: 0,
-			isPublished: req.body.publish,
-			pollOptions: req.body.pollOptions.map(value => ({
-				title: value,
-				votes: 0,
-			})),
-			title: req.body.title,
-			usersVoted: [],
-			createdBy: req.user.sub,
-		}
+		// No delete flag and no ID. Enter the create flow
+		console.log('creating survey: ', req.body)
+		const {
+			title,
+			pollOptions,
+			publish,
+		} = req.body
+		const survey = getCompleteSurvey(title, pollOptions, publish, req.user.sub)
 		mongodb.MongoClient.connect(mongoUri, function(err, db) {
 			if (err) returnError(res, err)
 			db.collection('survey').insertOne(survey, function(err, result) {
-				if (err) returnError(res, err)
 				db.close()
-				res.json({
-					success: true,
-					survey,
-				})
+				if (err) {
+					returnError(res, err)
+				} else {
+					res.json({
+						success: true,
+						survey,
+					})
+				}
 			})
 		})
 	}

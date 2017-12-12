@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react'
 import {
 	Input,
@@ -20,6 +21,12 @@ const inputStyles = {
 }
 
 class DynamicFieldset extends Component {
+	static propTypes = {
+		form: PropTypes.object.isRequired,
+		formItemLayout: PropTypes.object.isRequired,
+		initialValue: PropTypes.array.isRequired,
+	}
+
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -61,9 +68,9 @@ class DynamicFieldset extends Component {
 	}
 
 	render() {
-		const { form, formItemLayout, initialValue } = this.props
-		const init = ['one','two','three']
-		form.getFieldDecorator('keys', { initialValue: init });
+		const { form, formItemLayout } = this.props
+		const initialValue = this.props.initialValue.reduce((arr, item) => { arr.push(item.title); return arr; }, [])
+		form.getFieldDecorator('keys', { initialValue });
 		const keys = form.getFieldValue('keys')
 		return (
 			<div>
@@ -82,7 +89,8 @@ class DynamicFieldset extends Component {
 										required: true,
 										whitespace: true,
 										message: 'This poll option must have a value!'
-									}]
+									}],
+									initialValue: initialValue[index],
 								})(
 									<Input style={ inputStyles } />
 								)

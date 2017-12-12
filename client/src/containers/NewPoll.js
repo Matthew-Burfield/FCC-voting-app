@@ -67,11 +67,13 @@ class NewPoll extends Component {
 	}
 
 	handleSubmit = (e) => {
-		const { createNewPoll, form } = this.props
+		const { createNewPoll, form, survey } = this.props
+		const id = survey ? survey._id : void 0
     e.preventDefault();
     form.validateFields((err, values) => {
       if (!err) {
         createNewPoll({
+					id,
 					title: values.title,
 					publish: !!values.publish,
 					pollOptions: values.keys.map(key => values[`option-${key}`])
@@ -93,7 +95,7 @@ class NewPoll extends Component {
 		return (
 			<Spin
 				size="large"
-				spinning={ this.state.hasSubmitted && this.props.isLoading }
+				spinning={ this.props.isLoading }
 			>
 				<ContentHeader>New Poll</ContentHeader>
 				<Form
@@ -156,15 +158,15 @@ NewPoll.propTypes = {
 	survey: PropTypes.shape({
 		_id: PropTypes.string.isRequired,
 		comments: PropTypes.arrayOf(PropTypes.shape({
-			comment: PropTypes.string.isRequired,
-			datetime: PropTypes.number.isRequired,
+			comment: PropTypes.string,
+			datetime: PropTypes.number,
 		})).isRequired,
 		datetime: PropTypes.number.isRequired,
 		isDeleted: PropTypes.number.isRequired,
 		isPublished: PropTypes.bool.isRequired,
 		pollOptions: PropTypes.arrayOf(PropTypes.shape({
-			title: PropTypes.string.isRequired,
-			votes: PropTypes.number.isRequired,
+			title: PropTypes.string,
+			votes: PropTypes.number,
 		})).isRequired,
 		title: PropTypes.string.isRequired,
 		usersVoted: PropTypes.arrayOf(PropTypes.string).isRequired,
