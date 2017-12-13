@@ -45,10 +45,35 @@ const unauthorized = (err, req, res, next) => {
 	}
 }
 
-app.get('/surveys', function(req, res) {
+const allowUnauthorizedAccess = (err, req, res, next) => {
+	return next()
+}
+
+const getUserId = (req) => {
+	if (req && req.user && req.user.sub) {
+		return req.user.sub
+	}
+	return void 0
+}
+
+// Do a jwtCheck to see if the user is logged in so we can
+// get their unpublished surveys if they are.
+// If they aren't return all the published surveys
+app.get('/surveys', jwtCheck, allowUnauthorizedAccess, function(req, res) {
+	const loggedInUserId = getUserId(req)
 	mongodb.MongoClient.connect(mongoUri, function(err, db) {
 		if (err) throw err
-		db.collection('survey').find({}).sort( { datetime: -1 } ).toArray(function(err, result) {
+		db.collection('survey').find({
+			$or: [{
+				isPublished: true,
+			}, {
+				$and: [{
+					isPublished: false,
+				}, {
+					createdBy: loggedInUserId,
+				}],
+			}],
+		}).sort( { datetime: -1 } ).toArray(function(err, result) {
 			const surveysObj = result.reduce((obj, survey) => {
 				obj[survey._id] = survey
 				return obj

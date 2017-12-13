@@ -96,7 +96,12 @@ export const getAllPolls = () => {
   return dispatch => {
     dispatch(isLoading(true))
     axios
-		.get(`${API_DOMAIN}/surveys`)
+		.get(`${API_DOMAIN}/surveys`, {
+      headers: {
+        authorization: `Bearer ${getAccessToken()}`,
+        'Content-Type': 'application/json'
+      }
+    })
 		.then(response => response.data)
 		.then(surveys => {
       dispatch(isLoading(false))
