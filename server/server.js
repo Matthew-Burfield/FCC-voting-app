@@ -56,6 +56,21 @@ const getUserId = (req) => {
 	return void 0
 }
 
+const connectToDatabase = (res, callback) => {
+	const response = (db, err, responseValues) => {
+		db.close()
+		if (err) {
+			returnError(res, err)
+		} else {
+			res.json(Object.assign({}, { success: true }, responseValues))	
+		}
+	}
+	mongodb.MongoClient.connect(mongoUri, function(err, db) {
+		if (err) returnError(res, err)
+		callback(db, response)
+	})
+}
+
 // Do a jwtCheck to see if the user is logged in so we can
 // get their unpublished surveys if they are.
 // If they aren't return all the published surveys
@@ -85,8 +100,7 @@ app.get('/surveys', jwtCheck, allowUnauthorizedAccess, function(req, res) {
 })
 
 app.get('/survey', function(req, res) {
-	mongodb.MongoClient.connect(mongoUri, function(err, db) {
-		if (err) throw err
+	connectToDatabase(res, (db) => {
 		db.collection('survey').find({
 			_id: mongodb.ObjectId(req.query.id),
 		}).toArray(function(err, result) {
@@ -103,19 +117,13 @@ app.get('/survey', function(req, res) {
 app.post('/vote', function(req, res) {
 	const id = req.body.pollId
 	const vote = `pollOptions.${req.body.optionIndex}.votes`
-	mongodb.MongoClient.connect(mongoUri, function(err, db) {
-		if (err) returnError(res, err)
-		db.collection('survey').update(
-			{ _id: mongodb.ObjectID(id) },
-			{ $inc: { [vote]: 1 }}, function(err, result) {
-			db.close()
-			if (err) {
-				returnError(res, err)
-			} else {
-				res.json({
-					success: true,
-				})
-			}
+	connectToDatabase(res, (db, response) => {
+		db.collection('survey').update({
+			_id: mongodb.ObjectID(id),
+		}, {
+			$inc: { [vote]: 1 },
+		}, function(err, result) {
+			response(db, err, {})
 		})
 	})
 })
@@ -126,19 +134,13 @@ app.post('/addPollOption', jwtCheck, unauthorized, function(req, res) {
 		title: req.body.title,
 		votes: 0,
 	}
-	mongodb.MongoClient.connect(mongoUri, function(err, db) {
-		if (err) returnError(res, err)
-		db.collection('survey').update(
-			{ _id: mongodb.ObjectID(id) },
-			{ $push: { pollOptions: pollOption } }, function(err, result) {
-			db.close()
-			if (err) {
-				returnError(res, err)
-			} else {
-				res.json({
-					success: true,
-				})
-			}
+	connectToDatabase(res, (db, response) => {
+		db.collection('survey').update({
+			_id: mongodb.ObjectID(id),
+		}, {
+			$push: { pollOptions: pollOption },
+		}, function(err, result) {
+			response(db, err, {})
 		})
 	})
 })
@@ -149,20 +151,15 @@ app.post('/comment', jwtCheck, unauthorized, function(req, res) {
 		value: req.body.comment,
 		datetime: moment().valueOf(),
 	}
-	mongodb.MongoClient.connect(mongoUri, function(err, db) {
-		if (err) returnError(res, err)
-		db.collection('survey').updateOne(
-			{ _id: mongodb.ObjectID(id) },
-			{ $push: { comments: comment }}, function(err, result) {
-				db.close()			
-				if (err) {
-					returnError(res, err)
-				} else {
-					res.json({
-						success: true,
-						datetime: comment.datetime,
-					})
-				}
+	connectToDatabase(res, (db, response) => {
+		db.collection('survey').updateOne({
+			_id: mongodb.ObjectID(id),
+		}, {
+			$push: { comments: comment },
+		}, function(err, result) {
+			response(db, err, {
+				datetime: comment.datetime,
+			})
 		})
 	})
 })
@@ -189,31 +186,22 @@ app.post('/survey', jwtCheck, unauthorized, function(req, res) {
 			returnError(res, 'Must provide the id of the survey to delete')
 		}
 		console.log('deleting survey: ', req.body.id)
-		mongodb.MongoClient.connect(mongoUri, function(err, db) {
-			if (err) returnError(res, err)
-			db.collection('survey').deleteOne({ _id: mongodb.ObjectId(req.body.id) })
-			db.close()
-			res.json({
-				success: true,
+		connectToDatabase(res, (db, response) => {
+			db.collection('survey').deleteOne({ _id: mongodb.ObjectId(req.body.id) }, function(err, result) {
+				response(db, err, {})
 			})
 		})
 	} else if (req.body.id) {
 		// This survey already has an ID. Enter the update flow
 		console.log('editing survey: ', req.body.id)
 		const survey = getCompleteSurvey(req.body.title, req.body.pollOptions, req.body.publish, req.user.sub)
-		mongodb.MongoClient.connect(mongoUri, function(err, db) {
-			if (err) returnError(res, err)
+		
+		connectToDatabase(res, (db, response) => {
 			db.collection('survey').updateOne({ _id: mongodb.ObjectID(req.body.id) }, survey, function(err, result) {
-				db.close()
-				if (err) {
-					returnError(res, err)
-				} else {
-					survey._id = req.body.id
-					res.json({
-						success: true,
-						survey,
-					})
-				}
+				survey._id = req.body.id
+				response(db, err, {
+					survey,
+				})
 			})
 		})
 	} else {
@@ -225,18 +213,11 @@ app.post('/survey', jwtCheck, unauthorized, function(req, res) {
 			publish,
 		} = req.body
 		const survey = getCompleteSurvey(title, pollOptions, publish, req.user.sub)
-		mongodb.MongoClient.connect(mongoUri, function(err, db) {
-			if (err) returnError(res, err)
+		connectToDatabase(res, (db, response) => {
 			db.collection('survey').insertOne(survey, function(err, result) {
-				db.close()
-				if (err) {
-					returnError(res, err)
-				} else {
-					res.json({
-						success: true,
-						survey,
-					})
-				}
+				response(db, err, {
+					survey,
+				})
 			})
 		})
 	}
