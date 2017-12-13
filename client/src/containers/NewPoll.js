@@ -41,6 +41,8 @@ const defaultSurveyFieldValues = {
 	pollOptions: []
 }
 
+const getIsPublished = survey => survey && survey.isPublished ? !!survey.isPublished : false
+
 class NewPoll extends Component {
 	static propTypes = {
 		createNewPoll: PropTypes.func,
@@ -89,9 +91,9 @@ class NewPoll extends Component {
 		const { getFieldDecorator } = this.props.form;
 		const {
 			title,
-			isPublished,
 			pollOptions,
 		} = this.props.survey || defaultSurveyFieldValues
+		const isPublished = getIsPublished(this.props.survey)
 		return (
 			<Spin
 				size="large"
@@ -110,10 +112,16 @@ class NewPoll extends Component {
 							<Input
 								prefix={<Icon type='title' style={{ fontSize: 13 }} />}
 								placeholder='Type here...'
+								disabled={ isPublished }
 							/>
 						)}
 					</FormItem>
-					<DynamicFieldset form={ this.props.form } formItemLayout={ formItemLayout } initialValue={ pollOptions } />
+					<DynamicFieldset
+						form={ this.props.form }
+						formItemLayout={ formItemLayout }
+						initialValue={ pollOptions }
+						disabled={ isPublished }
+					/>
 					<FormItem
 						label='Publish'
 						{ ...formItemLayout }
@@ -121,7 +129,11 @@ class NewPoll extends Component {
 						{getFieldDecorator('publish', {
 							initialValue: isPublished,
 						})(
-							<Switch type='publish'/>
+							<Switch
+								type='publish'
+								defaultChecked={ !isPublished }
+								disabled={ isPublished }
+							/>
 						)}
 					</FormItem>
 					<Row>

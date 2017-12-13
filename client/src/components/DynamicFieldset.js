@@ -22,15 +22,30 @@ const inputStyles = {
 
 class DynamicFieldset extends Component {
 	static propTypes = {
+		disabled: PropTypes.bool,
 		form: PropTypes.object.isRequired,
 		formItemLayout: PropTypes.object.isRequired,
-		initialValue: PropTypes.array.isRequired,
+		initialValue: PropTypes.array,
+	}
+
+	static defaultProps = {
+		disabled: false,
+		initialValue: [],
 	}
 
 	constructor(props) {
 		super(props)
 		this.state = {
 			numFields: 0,
+			initialKeysLength: props.initialValue.length - 1
+		}
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.initialValue.length !== this.props.initialValue.length) {
+			this.setState({
+				initialKeysLength: nextProps.initialValue.length - 1,
+			})
 		}
 	}
 
@@ -68,44 +83,51 @@ class DynamicFieldset extends Component {
 	}
 
 	render() {
-		const { form, formItemLayout } = this.props
+		const { disabled, form, formItemLayout } = this.props
+		const { initialKeysLength } = this.state
 		const initialValue = this.props.initialValue.reduce((arr, item) => { arr.push(item.title); return arr; }, [])
 		form.getFieldDecorator('keys', { initialValue });
 		const keys = form.getFieldValue('keys')
 		return (
 			<div>
 				{
-					keys.map((k, index) => (
-						<FormItem
-							key={ k }
-							required={ false }
-							label='Poll option'
-							{ ...formItemLayout }
-						>
-							{
-								form.getFieldDecorator(`option-${k}`, {
-									validateTrigger: ['onChange', 'onBlur'],
-									rules: [{
-										required: true,
-										whitespace: true,
-										message: 'This poll option must have a value!'
-									}],
-									initialValue: initialValue[index],
-								})(
-									<Input style={ inputStyles } />
-								)
-							}
-							{
-								keys.length > 1 &&
-									<Icon
-										className='dynamic-delete-button'
-										type='minus-circle-o'
-										disabled={ keys.length === 1 }
-										onClick={ () => this.remove(k) }
-									/>
-							}
-						</FormItem>
-					))
+					keys.map((k, index) => {
+						const isNewlyAddedPoll = index > initialKeysLength
+						const key = `${isNewlyAddedPoll ? 'new-' : 'option-'}${k}`
+						const inputDisabled = !isNewlyAddedPoll && disabled
+						return (
+							<FormItem
+								key={ k }
+								required={ true }
+								label='Poll option'
+								{ ...formItemLayout }
+							>
+								{
+									form.getFieldDecorator('option' + k, {
+										validateTrigger: ['onChange', 'onBlur'],
+										rules: [{
+											required: true,
+											whitespace: true,
+											message: 'This poll option must have a value!'
+										}],
+										initialValue: initialValue[index],
+									})(
+										<Input
+											style={ inputStyles }
+										/>
+									)
+								}
+								{
+									keys.length > 1 &&
+										<Icon
+											className='dynamic-delete-button'
+											type='minus-circle-o'
+											disabled={ keys.length === 1 }
+											onClick={ () => this.remove(k) }
+										/>
+								}
+							</FormItem>
+					)})
 				}
 				<Row>
 					<Col span={ 24 } offset={ 4 }>
