@@ -14,6 +14,10 @@ import Security from './Security'
 
 const { Content } = Layout
 
+const contentStyles = {
+	padding: 20,
+}
+
 class App extends Component {
   render() {
     return (
@@ -21,11 +25,7 @@ class App extends Component {
 				<Security>
 					<Layout>
 						<Header />
-						<Content
-							style={{
-								padding: 20,
-							}}
-						>
+						<Content style={ contentStyles }>
 							<Route exact path="/" component={ AllPolls }/>
 							<Route path="/login" component={ Login }/>
 							<Route path="/mypolls" component={ MyPolls }/>

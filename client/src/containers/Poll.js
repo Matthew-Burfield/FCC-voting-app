@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Spin } from 'antd'
-import { withRouter } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 
 import Comments from '../components/Comments'
 import ContentHeader from '../components/ContentHeader'
@@ -43,9 +43,11 @@ const Poll = ({ authenticated, deletePoll, history, isLoading, survey, userId })
 					null
 			}
 			{
-				authenticated ?
-					<button onClick={ () => {} }>Add new poll option</button> :
-					null
+				authenticated ? (
+					<Link to={ `/editpoll/${survey._id}` }>
+						<button>Add new poll option</button>
+					</Link>
+				 ) : null
 			}
 			<PieChart data={ survey.pollOptions } width={ 400 } height={ 400 } />
 			<Comments

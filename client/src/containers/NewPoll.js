@@ -134,7 +134,6 @@ class NewPoll extends Component {
 						})(
 							<Switch
 								type='publish'
-								defaultChecked={ !isPublished }
 								disabled={ isPublished }
 							/>
 						)}
