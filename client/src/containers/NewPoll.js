@@ -77,7 +77,7 @@ class NewPoll extends Component {
         createNewPoll({
 					id,
 					title: values.title,
-					publish: !!values.publish,
+					publish: values.publish,
 					pollOptions: values.keys.map(key => ({
 						...key,
 						title: values[key.id],
@@ -97,6 +97,7 @@ class NewPoll extends Component {
 			pollOptions,
 		} = this.props.survey || defaultSurveyFieldValues
 		const isPublished = getIsPublished(this.props.survey)
+		const defaultSwitchProps = isPublished ? { defaultChecked: true } : {}
 		return (
 			<Spin
 				size="large"
@@ -135,6 +136,7 @@ class NewPoll extends Component {
 							<Switch
 								type='publish'
 								disabled={ isPublished }
+								{ ...defaultSwitchProps }
 							/>
 						)}
 					</FormItem>
