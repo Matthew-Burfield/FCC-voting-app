@@ -78,7 +78,10 @@ class NewPoll extends Component {
 					id,
 					title: values.title,
 					publish: !!values.publish,
-					pollOptions: values.keys.map(key => values[`option-${key}`])
+					pollOptions: values.keys.map(key => ({
+						...key,
+						title: values[key.id],
+					})),
 				})
 				this.setState({
 					hasSubmitted: true,

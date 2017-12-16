@@ -8,6 +8,7 @@ import {
 	Row,
 	Col,
 } from 'antd'
+import uuid from 'uuid'
 
 const FormItem = Form.Item
 
@@ -33,84 +34,61 @@ class DynamicFieldset extends Component {
 		initialValue: [],
 	}
 
-	constructor(props) {
-		super(props)
-		this.state = {
-			numFields: 0,
-			initialKeysLength: props.initialValue.length - 1
-		}
-	}
-
-	componentWillReceiveProps(nextProps) {
-		if (nextProps.initialValue.length !== this.props.initialValue.length) {
-			this.setState({
-				initialKeysLength: nextProps.initialValue.length - 1,
-			})
-		}
-	}
-
-	remove = keyToRemove => {
+	remove = keyId => {
 		const { form } = this.props
 
-		this.setState(prevState => ({
-			numFields: prevState.numFields - 1
-		}), () => {
-			const keys = form.getFieldValue('keys')
-			if (keys.length === 1) {
-				return
-			}
-			// notify the form to detect changes
-			form.setFieldsValue({
-				keys: keys.filter(key => key !== keyToRemove)
-			})
+		const keys = form.getFieldValue('keys')
+		if (keys.length === 1) {
+			return
+		}
+		// notify the form to detect changes
+		form.setFieldsValue({
+			keys: keys.filter(key => key.id !== keyId)
 		})
 	}
 
-	add = keyToAdd => {
+	add = () => {
 		const { form } = this.props
 
-		this.setState(prevState => ({
-			numFields: prevState.numFields + 1
-		}), () => {
-			const keys = form.getFieldValue('keys')
-			const nextKeys = keys.concat(this.state.numFields)
-	
-			// notify the form to detect changes
-			form.setFieldsValue({
-				keys: nextKeys,
-			})
+		const keys = form.getFieldValue('keys')
+		const nextKeys = keys.concat({
+			id: uuid(),
+			title: '',
+			votes: 0,
+		})
+
+		// notify the form to detect changes
+		form.setFieldsValue({
+			keys: nextKeys,
 		})
 	}
 
 	render() {
-		const { disabled, form, formItemLayout } = this.props
-		const { initialKeysLength } = this.state
-		const initialValue = this.props.initialValue.reduce((arr, item) => { arr.push(item.title); return arr; }, [])
-		form.getFieldDecorator('keys', { initialValue });
+		const { disabled, form, formItemLayout, initialValue } = this.props
+		form.getFieldDecorator('keys', { initialValue })
 		const keys = form.getFieldValue('keys')
 		return (
 			<div>
 				{
 					keys.map((k, index) => {
-						const isNewlyAddedPoll = index > initialKeysLength
-						const key = `${isNewlyAddedPoll ? 'new-' : 'option-'}${k}`
+						const isNewlyAddedPoll = index > initialValue.length
 						const inputDisabled = !isNewlyAddedPoll && disabled
 						return (
 							<FormItem
-								key={ k }
+								key={ k.id }
 								required={ true }
 								label='Poll option'
 								{ ...formItemLayout }
 							>
 								{
-									form.getFieldDecorator('option' + k, {
+									form.getFieldDecorator(k.id, {
 										validateTrigger: ['onChange', 'onBlur'],
 										rules: [{
 											required: true,
 											whitespace: true,
 											message: 'This poll option must have a value!'
 										}],
-										initialValue: initialValue[index],
+										initialValue: k.title,
 									})(
 										<Input
 											style={ inputStyles }
@@ -123,7 +101,7 @@ class DynamicFieldset extends Component {
 											className='dynamic-delete-button'
 											type='minus-circle-o'
 											disabled={ keys.length === 1 }
-											onClick={ () => this.remove(k) }
+											onClick={ () => this.remove(k.id) }
 										/>
 								}
 							</FormItem>

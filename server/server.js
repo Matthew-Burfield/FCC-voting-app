@@ -164,15 +164,12 @@ app.post('/comment', jwtCheck, unauthorized, function(req, res) {
 	})
 })
 
-const getCompleteSurvey = (title, options, isPublished, user) => ({
+const getCompleteSurvey = (title, pollOptions, isPublished, user) => ({
 	comments: [],
 	datetime: moment().valueOf(),
 	isDeleted: 0,
 	isPublished,
-	pollOptions: options.map(value => ({
-		title: value,
-		votes: 0,
-	})),
+	pollOptions,
 	title,
 	usersVoted: [],
 	createdBy: user,
