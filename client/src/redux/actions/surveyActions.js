@@ -10,6 +10,7 @@ export const SAVE_SURVEYS = 'SAVE_SURVEYS'
 export const IS_LOADING = 'IS_LOADING'
 export const INCREASE_VOTE = 'INCREASE_VOTE'
 export const REMOVE_SURVEY = 'REMOVE_SURVEY'
+export const REMOVE_UNPUBLISHED = 'REMOVE_UNPUBLISHED'
 
 const addCommentToSurvey = ({ comment, datetime, surveyId }) => {
   return {
@@ -149,6 +150,12 @@ const removeSurveyFromState = (id) => {
     payload: {
       id,
     }
+  }
+}
+
+export const removeUnpublishedPolls = () => {
+  return {
+    type: REMOVE_UNPUBLISHED,
   }
 }
 

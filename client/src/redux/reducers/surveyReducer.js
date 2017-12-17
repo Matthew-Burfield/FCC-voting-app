@@ -4,6 +4,7 @@ import {
   IS_LOADING,
   INCREASE_VOTE,
   REMOVE_SURVEY,
+  REMOVE_UNPUBLISHED,
 } from '../actions/surveyActions'
 
 const DEFAULT_STORE = {
@@ -61,6 +62,19 @@ const removeSurvey = (state, action) => {
   }
 }
 
+const removeUnpublishedSurveys = (state, action) => {
+  // This is a quick way to deep clone an object. There are a couple of gotchas however,
+  // 1. Functions don't get copied because the JSON parser can't handle them
+  // 2. Dates object get stuffed up. I'm using UTC format for storing dates though, which is fine.
+  const surveysClone = JSON.parse(JSON.stringify(state.surveys))
+	return {
+    ...state,
+    surveys: {
+      ...Object.values(surveysClone).filter(item => item.isPublished).reduce((obj, item) => { obj[item._id] = item; return obj; }, {}),
+    },
+  }
+}
+
 const setIsLoading = (state, action) => {
   return {
     ...state,
@@ -80,6 +94,8 @@ export default (state = DEFAULT_STORE, action) => {
       return removeSurvey(state, action)
     case ADD_COMMENT:
       return addComment(state, action)
+    case REMOVE_UNPUBLISHED:
+      return removeUnpublishedSurveys(state, action)
     default:
       return state
   }
