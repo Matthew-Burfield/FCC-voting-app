@@ -41,7 +41,11 @@ const jwtCheck = jwt({
 
 const unauthorized = (err, req, res, next) => {
 	if (err.name === 'UnauthorizedError') {
+		console.log("Start unauthorized sequence")
 		res.status(401).json({ message: 'Missing or invalid token' })
+	}
+	if (err.name === 'TypeError') {
+		res.status(400).json(err)
 	}
 }
 
@@ -220,4 +224,6 @@ app.post('/survey', jwtCheck, unauthorized, function(req, res) {
 	}
 })
 
-app.listen(8000, () => console.log('Example app listening on port 8000!'))
+const port = process.env.PORT || 8000
+
+app.listen(port, () => console.log(`Example app listening on port ${port}!`))

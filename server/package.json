@@ -4,6 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+		"predeploy": "cd ..",
+		"deploy": "git subtree push --prefix server heroku master",
+		"postdeploy": "cd server",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nf run nodemon server.js"
   },
