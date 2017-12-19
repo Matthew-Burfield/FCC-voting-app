@@ -2,7 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://fcc-voting-app.surge.sh",
+  "homepage": "https://fcc-voting-app.surge.sh",
   "devDependencies": {
     "babel-plugin-import": "^1.6.0",
     "enzyme": "^3.1.0",
