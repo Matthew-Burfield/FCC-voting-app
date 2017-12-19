@@ -1,4 +1,4 @@
-export const API_DOMAIN = 'https://burfield-voting-app.herokuapp.com/';
+export const API_DOMAIN = 'https://burfield-voting-app.herokuapp.com';
 export const authDomain = 'matthew-burfield.au.auth0.com'
 export const audience = 'matthew-burfield.com.au/voting-app'
 export const scope = 'openid%20profile%20email'
