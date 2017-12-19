@@ -12,7 +12,7 @@ const app = express()
 const mongoUri = process.env.MONGO_URL;
 
 const corsOptions = {
-  origin: 'https://matthew-burfield.github.io',
+  origin: 'http://fcc-voting-app.surge.sh',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 app.use(cors(corsOptions))

@@ -2,7 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://matthew-burfield.github.io/FCC-voting-app",
+  "homepage": "https://matthew-burfield.github.io",
   "devDependencies": {
     "babel-plugin-import": "^1.6.0",
     "enzyme": "^3.1.0",
