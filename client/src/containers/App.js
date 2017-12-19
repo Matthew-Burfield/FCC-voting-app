@@ -25,14 +25,12 @@ class App extends Component {
 				<Security>
 					<Layout>
 						<Header />
-						<Content style={ contentStyles }>
-							<Route exact path="/" component={ AllPolls }/>
-							<Route path="/login" component={ Login }/>
-							<Route path="/mypolls" component={ MyPolls }/>
-							<Route path="/poll/:surveyId" component={ Poll }/>
-							<Route path="/newpoll" component={ NewPoll }/>
-							<Route path="/editpoll/:surveyId" component={ NewPoll }/>
-						</Content>
+						<Route exact path="/" component={ AllPolls }/>
+						<Route path="/login" component={ Login }/>
+						<Route path="/mypolls" component={ MyPolls }/>
+						<Route path="/poll/:surveyId" component={ Poll }/>
+						<Route path="/newpoll" component={ NewPoll }/>
+						<Route path="/editpoll/:surveyId" component={ NewPoll }/>
 					</Layout>
 				</Security>
       </Provider>
